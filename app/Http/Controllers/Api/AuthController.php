@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    /*
+    AuthController: Controleur pour l'authentification en utilisant passport
+    */
     public function register(Request $request) {
 
         $validate_data = $request->validate([

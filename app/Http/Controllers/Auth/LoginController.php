@@ -18,7 +18,7 @@ class LoginController extends Controller
     | This controller handles authenticating users for the application and
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
-    |
+    | Gestion de l'authentification des clients et des animatrices
     */
 
     use AuthenticatesUsers;
@@ -58,7 +58,7 @@ class LoginController extends Controller
         if (Auth::guard('super_clients')->attempt(['email' => $request->email, "password" => $request->password], $request->get('remember'))) {
             return redirect()->intended('/super_clients');
         }
-        
+
 
         return back()->withInput($request->only('email', 'remember'));
     }

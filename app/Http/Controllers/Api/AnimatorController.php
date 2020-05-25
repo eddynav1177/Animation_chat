@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class AnimatorController extends Controller
 {
+    /*
+    AnimatorController: Controleur pour la gestion des animatrices
+    */
     //
     public function listAnimatorsConnected() {
 

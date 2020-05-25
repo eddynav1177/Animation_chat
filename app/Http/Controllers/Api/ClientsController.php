@@ -9,6 +9,11 @@ use Auth;
 
 class ClientsController extends Controller
 {
+    /*
+    ClientsController: Controleur pour la gestion des clients
+    */
+
+
     //
     /*public function __construct() {
 
