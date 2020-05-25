@@ -28,21 +28,24 @@ FackUsersController : controleur pour la gestion des faux utilisateurs incarnés
 AnimatorController: Controleur pour la gestion des animatrices
 Register Controller : Gestion de l'inscription des clients et des animatrices
 ClientsController: Controleur pour la gestion des clients
+ConversationsController: Controleur pour la gestion conversations entre les clients et les animatrices
 */
 
 Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
 Route::get('/login/animateurs', 'Auth\LoginController@animateursLoginForm');
 Route::get('/register/clients', 'Auth\RegisterController@clientsRegister');
 Route::get('/register/animateurs', 'Auth\RegisterController@animatorRegister');
-Route::get('/message/view', 'Api\MessagesController@viewMessage');
-Route::get('/home/show_profile_client', 'Api\ClientsController@showProfileUser');
+
+Route::get('/conversation/{id}', 'Api\ConversationsController@viewConversation');
+Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
+Route::get('/home/show_profile_client/{id}', 'Api\ClientsController@showProfileUser');
 Route::get('/home/list_users_connected', 'Api\ClientsController@listUsersConnected');
 Route::get('/home/list_animator_connected', 'Api\AnimatorController@listAnimatorsConnected');
-Route::get('/home/show_profile_animator', 'Api\AnimatorController@showProfileAnimator');
+Route::get('/home/show_profile_animator/{id}', 'Api\AnimatorController@showProfileAnimator');
 Route::get('/message/chat_user', 'Api\ClientsController@chatByUser');
 Route::get('/animator/change_animator', 'Api\AnimatorController@changeAnimatorIfNotPresent');
-Route::get('/fack_users/show_profile', 'Api\FackUsersController@showProfile');
-Route::get('/animator/choose_fack_user', 'Api\AnimatorController@chooseFackUser');
+Route::get('/fack_users/show_profile/{id}', 'Api\FackUsersController@showProfile');
+Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');
 
 Route::post('/login/user', 'Auth\LoginController@clientsLogin');
 Route::post('/login/animateurs', 'Auth\LoginController@animateursLogin');
@@ -50,7 +53,8 @@ Route::post('/register/user', 'Auth\RegisterController@createClient');
 Route::post('/register/animateurs', 'Auth\RegisterController@createAnimateur');
 Route::post('/message/send_message', 'Api\MessagesController@sendMessage');
 Route::post('/message/send_message_by_users', 'Api\MessagesController@sendMessageUserByUsers');
-Route::get('/animator/register_choose_fack_user', 'Api\AnimatorController@RegisterFackUserChosen');
+Route::post('/animator/register_choose_fack_user', 'Api\AnimatorController@RegisterFackUserChosen');
+Route::get('/conversation/register', 'Api\ConversationsController@registerConversation');
 
 // Route::view('/home', 'home')->middleware('auth');
 Route::view('/user', 'user');

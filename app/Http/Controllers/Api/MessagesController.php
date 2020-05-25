@@ -12,7 +12,7 @@ class MessagesController extends Controller
     */
     //
     public function viewMessage() {
-        return view('message/viewmessage');
+        // return view('message/viewmessage');
     }
 
     public function sendMessage() {
