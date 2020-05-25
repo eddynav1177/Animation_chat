@@ -47,11 +47,11 @@ return [
             'hash' => false,
         ],
         'super_clients' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'super_clients',
         ],
         'animateurs' => [
-            'driver' => 'session',
+            'driver' => 'passport',
             'provider' => 'animateurs',
         ],
     ],
