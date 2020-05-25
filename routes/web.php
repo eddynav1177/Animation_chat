@@ -32,11 +32,13 @@ Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
 Route::get('/login/animateurs', 'Auth\LoginController@animateursLoginForm');
 Route::get('/register/clients', 'Auth\RegisterController@clientsRegister');
 Route::get('/register/animateurs', 'Auth\RegisterController@animatorRegister');
+Route::get('/message/view', 'Auth\MessagesController@viewMessage');
 
 Route::post('/login/super_clients', 'Auth\LoginController@clientsLogin');
 Route::post('/login/animateurs', 'Auth\LoginController@animateursLogin');
 Route::post('/register/super_clients', 'Auth\RegisterController@createClient');
 Route::post('/register/animateurs', 'Auth\RegisterController@createAnimateur');
+Route::post('/message/send_message', 'Auth\MessagesController@sendMessage');
 
 // Route::view('/home', 'home')->middleware('auth');
 Route::view('/super_clients', 'super_clients');
