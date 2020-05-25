@@ -10,7 +10,7 @@ use Auth;
 class ClientsController extends Controller
 {
     //
-    public function __construct() {
+    /*public function __construct() {
 
         $this->middleware('guest')->except('logout');
         $this->middleware('guest:super_clients')->except('logout');
@@ -34,7 +34,7 @@ class ClientsController extends Controller
         if (Auth::guard('super_clients')->attempt(['email' => $request->email, "password" => $request->password], $request->get('remember'))) {
             return redirect()->intended('/super_clients');
         }
-        
+
 
         return back()->withInput($request->only('email', 'remember'));
     }
@@ -57,6 +57,19 @@ class ClientsController extends Controller
         }
 
         return back()->withInput($request->only('email', 'remember'));
+    }*/
+
+    public function showProfileUser() {
+
+
     }
-    
+
+    public function listUsersConnected() {
+
+    }
+
+    public function chatByUser() {
+
+    }
+
 }
