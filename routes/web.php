@@ -42,8 +42,8 @@ Route::post('/login/super_clients', 'Auth\LoginController@clientsLogin');
 Route::post('/login/animateurs', 'Auth\LoginController@animateursLogin');
 Route::post('/register/super_clients', 'Auth\RegisterController@createClient');
 Route::post('/register/animateurs', 'Auth\RegisterController@createAnimateur');
-Route::post('/message/send_message', 'Auth\MessagesController@sendMessage');
-Route::post('/message/send_message_by_users', 'Auth\MessagesController@sendMessageUserByUsers');
+Route::post('/message/send_message', 'Api\MessagesController@sendMessage');
+Route::post('/message/send_message_by_users', 'Api\MessagesController@sendMessageUserByUsers');
 Route::get('/animator/register_choose_fack_user', 'Api\AnimatorController@RegisterFackUserChosen');
 
 // Route::view('/home', 'home')->middleware('auth');
