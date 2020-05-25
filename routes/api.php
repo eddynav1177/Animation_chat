@@ -21,8 +21,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/login', 'Api\AuthController@login');
 
-
-
+/*
+AuthController: Controleur pour l'authentification en utilisant passport
+LoginController : Gestion de l'authentification des clients et des animatrices
+FackUsersController : controleur pour la gestion des faux utilisateurs incarnés par les animatrices
+AnimatorController: Controleur pour la gestion des animatrices
+Register Controller : Gestion de l'inscription des clients et des animatrices
+ClientsController: Controleur pour la gestion des clients
+*/
 
 Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
 Route::get('/login/animateurs', 'Auth\LoginController@animateursLoginForm');
