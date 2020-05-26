@@ -74,10 +74,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
-        'super_clients' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\ClientsModel::class,
-        ],
         'animateurs' => [
             'driver' => 'eloquent',
             'model' => App\Models\AnimateursModel::class,
