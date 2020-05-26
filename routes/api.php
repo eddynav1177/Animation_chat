@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::post('/register', 'Api\AuthController@register');
-Route::post('/login', 'Api\AuthController@login');
-// Route::post('/redirect/home', 'Api\AuthController@login');
-
 /*
 AuthController: Controleur pour l'authentification en utilisant passport
 LoginController : Gestion de l'authentification des clients et des animatrices
@@ -31,6 +23,18 @@ Register Controller : Gestion de l'inscription des clients et des animatrices
 ClientsController: Controleur pour la gestion des clients
 ConversationsController: Controleur pour la gestion conversations entre les clients et les animatrices
 */
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::post('/register', 'Api\AuthController@register');
+Route::post('/register/user_register', 'Api\AuthController@userRegister');
+Route::post('/register/animatrice_register', 'Api\AuthController@animatriceRegister');
+Route::post('/login/user_login', 'Api\AuthController@loginUser');
+Route::post('/login/animatrice', 'Api\AuthController@loginAnimatrice');
+Route::get('/logout/{id}', 'Api\AuthController@loggout');
+// Route::post('/redirect/home', 'Api\AuthController@login');
 
 Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
 Route::get('/login/clients', 'Auth\RegisterController@clientsLoginForm');

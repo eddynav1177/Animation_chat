@@ -58,7 +58,6 @@ class LoginController extends Controller
             'user'          => auth()->user(),
             'access_token'  => $access_token
         ]);
-
     }
 
     public function clientsLogin(Request $request) {
