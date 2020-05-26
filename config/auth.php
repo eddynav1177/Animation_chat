@@ -46,10 +46,6 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
-        'super_clients' => [
-            'driver' => 'passport',
-            'provider' => 'super_clients',
-        ],
         'animateurs' => [
             'driver' => 'passport',
             'provider' => 'animateurs',

@@ -36,12 +36,6 @@ Route::post('/login/animatrice', 'Api\AuthController@loginAnimatrice');
 Route::get('/logout/{id}', 'Api\AuthController@loggout');
 // Route::post('/redirect/home', 'Api\AuthController@login');
 
-Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
-Route::get('/login/clients', 'Auth\RegisterController@clientsLoginForm');
-Route::get('/login/animateurs', 'Auth\LoginController@animateursLoginForm');
-Route::get('/register/clients', 'Auth\RegisterController@clientsRegister');
-Route::get('/register/animateurs', 'Auth\RegisterController@animatorRegister');
-
 Route::get('/home/show_profile_client/{id}', 'Api\ClientsController@showProfileUser');
 Route::get('/home/list_users_connected', 'Api\ClientsController@listUsersConnected');
 Route::get('/home/list_animator_connected', 'Api\AnimatorController@listAnimatorsConnected');
