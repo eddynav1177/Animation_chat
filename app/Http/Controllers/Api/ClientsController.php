@@ -69,8 +69,18 @@ class ClientsController extends Controller
 
     }
 
-    public function listUsersConnected() {
-
+    public function listUsersConnected(Request $request) {
+        /*$value = $request->session()->get('key', function () {
+            return response([
+                'default' => 'default'
+            ]);
+        });*/
+        $data = '';
+        if ($request->session()->has('users')) {
+            //
+            $data = $request->session()->all();
+        }
+        return response(['data' => $data]);
     }
 
     public function chatByUser() {

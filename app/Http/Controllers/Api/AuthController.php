@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 
 class AuthController extends Controller
 {
@@ -41,10 +42,21 @@ class AuthController extends Controller
             return response(['message' => 'Invalid login or password']);
         }
 
+        // $value = session('key', 'default');
+
         $access_token = auth()->user()->createToken('authToken')->accessToken;
-        return response([
-            'user'          => auth()->user(),
-            'access_token'  => $access_token
-        ]);
+        if (Auth::check()) {
+            $data = new User;
+            $data = $data->getUsersConnected();
+            return response([
+                'user'          => auth()->user(),
+                'access_token'  => $access_token,
+                'data'          => $data
+            ]);
+        }
+    }
+
+    public function redirectToHome() {
+
     }
 }

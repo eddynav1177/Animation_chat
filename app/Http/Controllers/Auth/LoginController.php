@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Auth;
+use Models\ClientsModel;
 
 class LoginController extends Controller
 {
@@ -42,9 +42,22 @@ class LoginController extends Controller
         $this->middleware('guest:animateurs')->except('logout');
     }
 
-    public function clientsLoginForm() {
+    public function clientsLoginForm(Request $request) {
 
-        return view('auth.login', ['url' => 'super_clients']);
+        // return view('auth.login', ['url' => 'super_clients']);
+        $login_data = $request->validate([
+            'email'     => 'email|required',
+            'password'  => 'required',
+        ]);
+
+        if (Auth::guard('super_clients')->attempt($login_data)) {
+            return response(['message' => 'Invalid login or password']);
+        }
+        $access_token   = Auth::guard('super_clients')->user()->createToken('authToken')->accessToken;
+        return response([
+            'user'          => auth()->user(),
+            'access_token'  => $access_token
+        ]);
 
     }
 

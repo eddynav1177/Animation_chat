@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/login', 'Api\AuthController@login');
+// Route::post('/redirect/home', 'Api\AuthController@login');
 
 /*
 AuthController: Controleur pour l'authentification en utilisant passport
@@ -32,6 +33,7 @@ ConversationsController: Controleur pour la gestion conversations entre les clie
 */
 
 Route::get('/login/clients', 'Auth\LoginController@clientsLoginForm');
+Route::get('/login/clients', 'Auth\RegisterController@clientsLoginForm');
 Route::get('/login/animateurs', 'Auth\LoginController@animateursLoginForm');
 Route::get('/register/clients', 'Auth\RegisterController@clientsRegister');
 Route::get('/register/animateurs', 'Auth\RegisterController@animatorRegister');
