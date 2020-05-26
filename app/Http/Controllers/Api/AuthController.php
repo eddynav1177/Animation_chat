@@ -60,11 +60,12 @@ class AuthController extends Controller
                     $users  = User::where(['isonline' => 1])->get();
                 }
 
-                $data   = [];
+                /*$data   = [];
 
                 foreach ($users as $user) {
                     $data[] = $user->id;
-                }
+                }*/
+                $data = $users->pluck('id');
 
                 return response([
                     'user'                  => auth()->user(),
