@@ -40,9 +40,7 @@ class MessagesController extends Controller
                         ]);
 
                         if ($validate_contenu) {
-
                             $status_destinataire    = User::whereRaw('isonline = 1 AND id = ' . $destination)->first();
-
                             if ($status_destinataire->count() > 0) {
                                 // Verification si le destinataire est connecté
                                 $destination = $status_destinataire->id;
@@ -72,6 +70,25 @@ class MessagesController extends Controller
             }
         }
 
+    }
+
+    public function viewAnimatriceMessages(Request $request, $id_animatrice) {
+
+        // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
+        // if (Auth::check()) {
+
+        // }
+
+        $animatrice_status = new UsersController;
+        $animatrice_status = $animatrice_status->get_status_user($id_animatrice);
+
+        if (!empty($animatrice_status)) {
+            $messages  = MessagesModel::whereRaw('sender = ' . $id_animatrice . ' OR destination = ' . $id_animatrice)->get();
+            $messages  = $messages->pluck('id');
+            return response([
+                'messages'   => $messages
+            ]);
+        }
     }
 
     public function sendMessageUserByUsers() {

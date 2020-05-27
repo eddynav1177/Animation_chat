@@ -42,6 +42,7 @@ Route::get('/home/list_animator_connected/{id}', 'Api\UsersController@listAnimat
 
 Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
 Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
+Route::get('/message/animatrice_messages/{id}', 'Api\MessagesController@viewAnimatriceMessages');
 
 Route::get('/animator/change_animator', 'Api\AnimatorController@changeAnimatorIfNotPresent');
 Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');

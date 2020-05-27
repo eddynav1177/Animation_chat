@@ -46,4 +46,9 @@ class UsersController extends Controller
         return $this->get_users_connected($id_animator, 1);
     }
 
+    public function get_status_user($user) {
+        $status = User::whereRaw('isonline = 1 AND id = ' . $user)->first();
+        return $status->id;
+    }
+
 }
