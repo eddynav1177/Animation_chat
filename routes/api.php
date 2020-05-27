@@ -37,7 +37,7 @@ Route::get('/logout/{id}', 'Api\AuthController@loggout');
 // Route::post('/redirect/home', 'Api\AuthController@login');
 
 Route::get('/home/show_profile_client/{id}', 'Api\ClientsController@showProfileUser');
-Route::get('/home/list_users_connected', 'Api\ClientsController@listUsersConnected');
+Route::get('/home/list_users_connected/{id}', 'Api\UsersController@listUsersConnected');
 Route::get('/home/list_animator_connected', 'Api\AnimatorController@listAnimatorsConnected');
 Route::get('/home/show_profile_animator/{id}', 'Api\AnimatorController@showProfileAnimator');
 

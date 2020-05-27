@@ -52,32 +52,24 @@ class AuthController extends Controller
         $access_token = auth()->user()->createToken('authToken')->accessToken;
 
         if (Auth::check()) {
-            $id_user = auth()->user()->id;
-            if (!empty($id_user)) {
-                if (!empty($is_admin)) {
-                    $users  = User::where(['isonline' => 1, 'is_admin' => 0])->get();
-                } else {
-                    $users  = User::where(['isonline' => 1])->get();
-                }
-
-                /*$data   = [];
-
-                foreach ($users as $user) {
-                    $data[] = $user->id;
-                }*/
-                $data = $users->pluck('id');
-
-                return response([
-                    'user'                  => auth()->user(),
-                    'access_token'          => $access_token,
-                    'all_users_connected'   => $data
-                ]);
+            if (!empty($is_admin)) {
+                $users  = User::where(['isonline' => 1, 'is_admin' => 0])->get();
+            } else {
+                $users  = User::where(['isonline' => 1])->get();
             }
+
+            // Update users status to online
+            User::where('id', '=', auth()->user()->id)->update(['isonline' => 1]);
+
+            return response([
+                'user'                  => auth()->user(),
+                'access_token'          => $access_token
+            ]);
         }
 
     }
 
-    public function loginUser(Request $request) {
+    public function loginUser() {
         return $this->get_user($request);
     }
 
