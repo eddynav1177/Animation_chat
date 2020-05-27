@@ -68,7 +68,7 @@ class AuthController extends Controller
 
     }
 
-    public function loginUser() {
+    public function loginUser(Request $request) {
         return $this->get_user($request);
     }
 

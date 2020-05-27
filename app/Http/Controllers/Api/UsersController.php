@@ -45,4 +45,5 @@ class UsersController extends Controller
     public function listAnimatorsConnected($id_animator) {
         return $this->get_users_connected($id_animator, 1);
     }
+
 }
