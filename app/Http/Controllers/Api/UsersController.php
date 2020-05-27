@@ -19,10 +19,13 @@ class UsersController extends Controller
         // Verifier si l'id_user est en statut online
         $user  = User::where(['isonline' => 1, 'id' => $id_user])->get();
         if ($user->count() > 0) {
+
+            // Lister les autres users connectés à part l'user en question
             if (!empty($is_admin)) {
-                $users  = User::where(['isonline' => 1, 'is_admin' => 0])->get();
+                $users  = User::whereRaw('isonline = 1 AND is_admin = 0 AND id <> ' . $id_user)->get();
             } else {
-                $users  = User::where(['isonline' => 1])->get();
+                // $users  = User::where(['isonline' => 1])->get();
+                $users  = User::whereRaw('isonline = 1 AND id <> ' . $id_user)->get();
             }
 
             $data = $users->pluck('id');

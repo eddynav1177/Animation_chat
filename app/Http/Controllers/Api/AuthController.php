@@ -27,8 +27,7 @@ class AuthController extends Controller
         $access_token   = $user->createToken('authToken')->accessToken;
 
         if ($user) {
-            $id_user = $user->id;
-            $affectedRows = User::where('id', $id_user)->update(['isonline' => 1, 'is_admin' => $is_admin]);
+            $affectedRows = User::where('id', $user->id)->update(['isonline' => 1, 'is_admin' => $is_admin]);
 
             return response([
                 'user'          => $user,
