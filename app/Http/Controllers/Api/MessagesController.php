@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UsersController;
 use Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Events\MessagesEvent;
+use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
@@ -52,8 +53,6 @@ class MessagesController extends Controller
                             $status_message_destinataire = $status_message_destinataire->original['last_message'];
                             $status_message_destinataire = (!empty($status_message_destinataire)) ? true : false;
 
-                            // TODO: si $status_message_destinataire vaut false, ajouter une petite notification pour que le sender puisse comprendre que la destination est deconnectee (dans une future utilisation)
-
                             $message           = MessagesModel::create([
                                 'title'         => $request->title,
                                 'content'       => $request->content,
@@ -61,19 +60,26 @@ class MessagesController extends Controller
                                 'destination'   => $destination,
                             ]);
 
+                            // Envoi des events vers pusher
                             // event(new MessagesEvent($request->content));
-                            $status_message = $this->verificationMessagesStatusByUsers($request, $id_animatrice);
+
+                            $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
                             if ($message) {
                                 return response([
                                     'message'               => $message,
                                     'statut_destination'    => $status_message_destinataire,
                                     'status_message'        => $status_message,
+                                    'date_default'        => date_default_timezone_get(),
                                 ]);
                             }
                         }
                     }
                 }
+            } else {
+                return response([
+                    'data' => false
+                ]);
             }
         }
     }
