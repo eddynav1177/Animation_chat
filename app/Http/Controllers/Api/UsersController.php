@@ -48,7 +48,9 @@ class UsersController extends Controller
 
     public function get_status_user($user) {
         $status = User::whereRaw('isonline = 1 AND id = ' . $user)->first();
-        return $status->id;
+        if (!empty($status->id)) {
+            return $status->id;
+        }
     }
 
 }

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 AuthController: Controleur pour l'authentification en utilisant passport
-LoginController : Gestion de l'authentification des clients et des animatrices
+UsersController : Gestion des clients et des animatrices après auth
 FackUsersController : controleur pour la gestion des faux utilisateurs incarnés par les animatrices
 AnimatorController: Controleur pour la gestion des animatrices
 Register Controller : Gestion de l'inscription des clients et des animatrices
@@ -41,27 +41,27 @@ Route::get('/home/list_users_connected/{id}', 'Api\UsersController@listUsersConn
 Route::get('/home/list_animator_connected/{id}', 'Api\UsersController@listAnimatorsConnected');
 
 Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
+// Route::get('/message/animatrice_messages/{id}', 'Api\MessagesController@viewAnimatriceMessages');
 Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
-Route::get('/message/animatrice_messages/{id}', 'Api\MessagesController@viewAnimatriceMessages');
-
-Route::get('/animator/change_animator', 'Api\AnimatorController@changeAnimatorIfNotPresent');
-Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');
-
-// Route::get('/fack_users/show_profile/{id}', 'Api\FackUsersController@showProfile');
+Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
 
 Route::get('/conversation/{id}', 'Api\ConversationsController@viewConversation');
+Route::get('/conversation/register', 'Api\ConversationsController@registerConversation');
 
-Route::post('/message/send_message', 'Api\MessagesController@sendMessage');
-Route::post('/message/send_message_by_users', 'Api\MessagesController@sendMessageUserByUsers');
+/*Route::post('/message/send_message', 'Api\MessagesController@sendMessage');
+Route::post('/message/send_message_by_users', 'Api\MessagesController@sendMessageUserByUsers');*/
 
 Route::post('/animator/register_choose_fack_user', 'Api\AnimatorController@RegisterFackUserChosen');
 
-Route::get('/conversation/register', 'Api\ConversationsController@registerConversation');
 
 Route::get('/send', function () {
     return event(new MessagesEvent('test'));
 });
 
+Route::get('/animator/change_animator', 'Api\AnimatorController@changeAnimatorIfNotPresent');
+Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');
+
+// Route::get('/fack_users/show_profile/{id}', 'Api\FackUsersController@showProfile');
 /*Route::get('/home/show_profile_client/{id}', 'Api\ClientsController@showProfileUser');
 Route::get('/home/show_profile_animator/{id}', 'Api\AnimatorController@showProfileAnimator');*/
 

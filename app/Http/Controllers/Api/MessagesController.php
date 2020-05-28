@@ -8,17 +8,14 @@ use App\Models\MessagesModel;
 use App\User;
 use App\Http\Controllers\Api\UsersController;
 use Auth;
+use App\Http\Controllers\Api\AuthController;
 use App\Events\MessagesEvent;
 
 class MessagesController extends Controller
 {
     /*
-    MessagesController: Controleur pour la gestion des messages envoyés par les client et/ou les animatrices
+    MessagesController: Controller pour la gestion des messages envoyés par les client et/ou les animatrices
     */
-    //
-    public function viewMessage() {
-        // return view('message/viewmessage');
-    }
 
     public function sendMessage(Request $request, $destination) {
 
@@ -42,13 +39,20 @@ class MessagesController extends Controller
                         if ($validate_contenu) {
                             $status_destinataire    = User::whereRaw('isonline = 1 AND id = ' . $destination)->first();
                             if ($status_destinataire->count() > 0) {
-                                // Verification si le destinataire est connecté
+                                // Verification si l'animatrice est connectée
                                 $destination = $status_destinataire->id;
                             } else {
                                 // Sinon, envoyer le message à une autre animatrice connectée
                                 $get_first_animator_connected   = User::whereRaw('isonline = 1 AND is_admin = 1')->orderByRaw('id')->first();
                                 $destination                    = $get_first_animator_connected->id;
                             }
+
+                            // Verification de la derniere date d'envoi d'un message
+                            $status_message_destinataire = $this->verificationMessagesStatusByUsers($request, $destination);
+                            $status_message_destinataire = $status_message_destinataire->original['last_message'];
+                            $status_message_destinataire = (!empty($status_message_destinataire)) ? true : false;
+
+                            // TODO: si $status_message_destinataire vaut false, ajouter une petite notification pour que le sender puisse comprendre que la destination est deconnectee (dans une future utilisation)
 
                             $message           = MessagesModel::create([
                                 'title'         => $request->title,
@@ -61,7 +65,8 @@ class MessagesController extends Controller
 
                             if ($message) {
                                 return response([
-                                    'message' => $message
+                                    'message'               => $message,
+                                    'statut_destination'    => $status_message_destinataire,
                                 ]);
                             }
                         }
@@ -69,33 +74,57 @@ class MessagesController extends Controller
                 }
             }
         }
-
     }
 
-    public function viewAnimatriceMessages(Request $request, $id_animatrice) {
+    public function viewMessage(Request $request, $id_animatrice) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         // if (Auth::check()) {
 
         // }
 
-        $animatrice_status = new UsersController;
-        $animatrice_status = $animatrice_status->get_status_user($id_animatrice);
-
-        if (!empty($animatrice_status)) {
+        $status_message = $this->verificationMessagesStatusByUsers($request, $id_animatrice);
+        if (!empty($status_message->original['last_message'])) {
             $messages  = MessagesModel::whereRaw('sender = ' . $id_animatrice . ' OR destination = ' . $id_animatrice)->get();
             $messages  = $messages->pluck('id');
+
             return response([
                 'messages'   => $messages
             ]);
         }
-    }
-
-    public function sendMessageUserByUsers() {
 
     }
 
-    public function chatByUser() {
+    /*public function sendMessageUserByUsers() {
+
+    }*/
+
+    public function verificationMessagesStatusByUsers(Request $request, $id_user) {
+
+        // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
+        // if (Auth::check()) {
+
+        // }
+
+        $user_status = new UsersController;
+        $user_status = $user_status->get_status_user($id_user);
+
+        if (!empty($user_status)) {
+            //Verification de la date d'envoi du dernier message
+            $last_message = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') AND created_at BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE) ORDER BY created_at DESC')->first();
+            /*if (empty($last_message)) {
+                $logout     = new AuthController;
+                $logout     = $logout->logout($request, $id_user);
+                $last_message = '';
+            } else {
+                $last_message = $last_message->id;
+            }*/
+            $last_message = (!empty($last_message)) ? $last_message->id : '';
+            return response([
+                'last_message' => $last_message
+            ]);
+        }
 
     }
+
 }
