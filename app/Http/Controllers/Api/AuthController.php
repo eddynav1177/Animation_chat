@@ -13,7 +13,7 @@ class AuthController extends Controller
     AuthController: Controleur pour l'authentification en utilisant passport
     */
 
-    public function register_all(Request $request, $is_online, $is_admin) {
+    public function register_all(Request $request, $is_admin) {
 
         $validate_data = $request->validate([
             'name'      => 'required|max:255',
@@ -22,17 +22,25 @@ class AuthController extends Controller
         ]);
 
         $validate_data['password'] = bcrypt($request->password);
-
-        $user           = User::create($validate_data);
-        $access_token   = $user->createToken('authToken')->accessToken;
-
-        if ($user) {
-            $affectedRows = User::where('id', $user->id)->update(['isonline' => 1, 'is_admin' => $is_admin]);
-
-            return response([
-                'user'          => $user,
-                'access_token'  => $access_token
+        if ($validate_data) {
+            $user           = User::create([
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'password'  => $validate_data['password'],
+                'isonline'  => 1,
+                'is_admin'  => $is_admin,
             ]);
+            if ($user) {
+                $access_token   = $user->createToken('authToken')->accessToken;
+
+                return response([
+                    'user'          => $user,
+                    'access_token'  => $access_token
+                ]);
+            }
+            return 'test';
+        } else {
+            return 'invalid creation';
         }
 
     }
@@ -84,10 +92,10 @@ class AuthController extends Controller
     }
 
     public function userRegister(Request $request) {
-        return $this->register_all($request, 1, 0);
+        return $this->register_all($request, 0);
     }
 
     public function animatriceRegister(Request $request) {
-        return $this->register_all($request, 1, 1);
+        return $this->register_all($request, 1);
     }
 }
