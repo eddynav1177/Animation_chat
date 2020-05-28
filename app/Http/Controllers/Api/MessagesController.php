@@ -62,11 +62,13 @@ class MessagesController extends Controller
                             ]);
 
                             // event(new MessagesEvent($request->content));
-
+                            $status_message = $this->verificationMessagesStatusByUsers($request, $id_animatrice);
+                            $status_message = $status_message->original['last_message'];
                             if ($message) {
                                 return response([
                                     'message'               => $message,
                                     'statut_destination'    => $status_message_destinataire,
+                                    'status_message'        => $status_message,
                                 ]);
                             }
                         }
@@ -76,35 +78,36 @@ class MessagesController extends Controller
         }
     }
 
-    public function viewMessage(Request $request, $id_animatrice) {
+    public function viewMessage(Request $request, $destination) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         // if (Auth::check()) {
 
         // }
+        $id_user        = auth()->user()->id;
+        $user_status    = new UsersController;
+        $user_status    = $user_status->get_status_user($id_user);
 
-        $status_message = $this->verificationMessagesStatusByUsers($request, $id_animatrice);
-        if (!empty($status_message->original['last_message'])) {
-            $messages  = MessagesModel::whereRaw('sender = ' . $id_animatrice . ' OR destination = ' . $id_animatrice)->get();
-            $messages  = $messages->pluck('id');
+        if (!empty($user_status)) {
+            $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
+            $status_message = $status_message->original['last_message'];
+            $messages       = MessagesModel::whereRaw('sender = ' . $id_user . ' AND destination = ' . $destination)->get();
+            $messages       = $messages->pluck('id');
 
             return response([
-                'messages'   => $messages
+                'messages'          => $messages,
+                'status_message'    => $status_message,
             ]);
         }
 
     }
-
-    /*public function sendMessageUserByUsers() {
-
-    }*/
 
     public function verificationMessagesStatusByUsers(Request $request, $id_user) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         // if (Auth::check()) {
 
-        // }
+            // }
 
         $user_status = new UsersController;
         $user_status = $user_status->get_status_user($id_user);
@@ -127,4 +130,25 @@ class MessagesController extends Controller
 
     }
 
+    public function viewConversation(Request $request, $id_user) {
+
+        // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
+        // if (Auth::check()) {
+
+        // }
+        $user_status = new UsersController;
+        $user_status = $user_status->get_status_user($id_user);
+
+        if (!empty($user_status)) {
+            $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
+            $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
+            $conversation_message = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
+
+            return response([
+                'conversation'     => $conversation_message,
+                'status_message'   => $status_message->original['last_message'],
+            ]);
+        }
+
+    }
 }
