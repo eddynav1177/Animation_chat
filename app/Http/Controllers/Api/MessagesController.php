@@ -65,6 +65,7 @@ class MessagesController extends Controller
 
                             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
+
                             if ($message) {
                                 // event(new MessagesEvent($message));
                                 // broadcast($event)->toOthers();
@@ -153,7 +154,7 @@ class MessagesController extends Controller
         if (!empty($user_status)) {
             $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
             $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
-            $conversation_message = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
+            $conversation_message   = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
 
             return response([
                 'conversation'     => $conversation_message,
