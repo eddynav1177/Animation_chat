@@ -49,18 +49,13 @@ window.Echo = new Echo({
     key: process.env.MIX_PUSHER_APP_KEY
 });*/
 
-import Echo from "laravel-echo"
+
+import Echo from "laravel-echo";
+import Pusher from 'pusher-js';
+
+window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    encrypted: true
+    key: '5f9a91e9b32d04b2f253'
 });
-
-/*Echo.private('chat')
-    .listen('NewMessageEvent', (e) => {
-        this.message.push(e);
-        this.message.push(e);
-        axios.post('/message/'+ e.id +'/read_at');
-    })*/
