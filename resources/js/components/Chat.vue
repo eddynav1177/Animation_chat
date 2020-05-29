@@ -39,13 +39,14 @@
                         label='Enter message'
                         single-line
                         v-model="message"
-                        @click="alert('ok')"
+                        @keyup.enter="sendMessage"
+
                     >
 
                     </v-text-field>
                 </v-flex>
                 <v-flex xs2>
-                    <v-btn dark class="mt-3 white--text" small color="green" @click="alert('ok');">Send</v-btn>
+                    <v-btn dark class="mt-3 white--text" small color="green" @click="sendMessage">Send</v-btn>
                 </v-flex>
             </v-layout>
         </v-footer>
@@ -55,8 +56,10 @@
 <script>
     export default {
         data () {
-            mesage: null,
-            allMessages: []
+            return {
+                mesage: null,
+                allMessages: []
+            }
         },
         mounted() {
             console.log('test');
@@ -68,17 +71,17 @@
                 }
 
                 // this.allMessages.push(this.message);
-                axios.post('/messages', this.message)
+                axios.post('/api/message/chat/1', {mesage: this.message})
                     .then(response => {
                         console.log(response.data);
                     });
             },
-            fechMessages() {
-                axios.get('/messages', this.message)
-                    .then(response => {
-                        this.allMessages    = response.data;
-                    });
-            }
+        },
+        fechMessages() {
+            axios.get('/messages', this.message)
+                .then(response => {
+                    this.allMessages    = response.data;
+                });
         }
     }
 </script>

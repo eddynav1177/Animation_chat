@@ -1904,9 +1904,97 @@ module.exports = {
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Chat.vue?vue&type=script&lang=js& ***!
   \***************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\Dev\\Kandra\\Laravel\\resources\\js\\components\\Chat.vue: Unexpected token, expected \";\" (59:19)\n\n\u001b[0m \u001b[90m 57 | \u001b[39m    data () {\u001b[0m\n\u001b[0m \u001b[90m 58 | \u001b[39m        mesage\u001b[33m:\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 59 | \u001b[39m        allMessages\u001b[33m:\u001b[39m []\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 60 | \u001b[39m    }\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 61 | \u001b[39m    mounted() {\u001b[0m\n\u001b[0m \u001b[90m 62 | \u001b[39m        console\u001b[33m.\u001b[39mlog(\u001b[32m'test'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n    at Parser._raise (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:742:17)\n    at Parser.raiseWithData (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:735:17)\n    at Parser.raise (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:729:17)\n    at Parser.unexpected (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:8779:16)\n    at Parser.semicolon (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:8761:40)\n    at Parser.parseExpressionStatement (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11637:10)\n    at Parser.parseStatementContent (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11238:19)\n    at Parser.parseStatement (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11104:17)\n    at Parser.parseLabeledStatement (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11629:22)\n    at Parser.parseStatementContent (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11236:19)\n    at Parser.parseStatement (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11104:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11679:25)\n    at Parser.parseBlockBody (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11665:10)\n    at Parser.parseBlock (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11649:10)\n    at Parser.parseFunctionBody (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10656:24)\n    at Parser.parseFunctionBodyAndFinish (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10639:10)\n    at Parser.parseMethod (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10601:10)\n    at Parser.parseObjectMethod (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10517:19)\n    at Parser.parseObjPropValue (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10559:23)\n    at Parser.parseObjectMember (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10483:10)\n    at Parser.parseObj (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10396:25)\n    at Parser.parseExprAtom (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:10017:28)\n    at Parser.parseExprSubscripts (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:9624:23)\n    at Parser.parseMaybeUnary (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:9604:21)\n    at Parser.parseExprOps (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:9474:23)\n    at Parser.parseMaybeConditional (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:9447:23)\n    at Parser.parseMaybeAssign (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:9402:21)\n    at Parser.parseExportDefaultExpression (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:12306:24)\n    at Parser.parseExport (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:12208:31)\n    at Parser.parseStatementContent (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11208:27)\n    at Parser.parseStatement (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11104:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11679:25)\n    at Parser.parseBlockBody (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11665:10)\n    at Parser.parseTopLevel (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:11035:10)\n    at Parser.parse (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:12671:10)\n    at parse (C:\\Dev\\Kandra\\Laravel\\node_modules\\@babel\\parser\\lib\\index.js:12722:38)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      mesage: null,
+      allMessages: []
+    };
+  },
+  mounted: function mounted() {
+    console.log('test');
+  },
+  methods: {
+    sendMessage: function sendMessage() {
+      if (!this.message) {
+        return alert('Entrez un message');
+      } // this.allMessages.push(this.message);
+
+
+      axios.post('/api/message/chat/1', {
+        mesage: this.message
+      }).then(function (response) {
+        console.log(response.data);
+      });
+    }
+  },
+  fechMessages: function fechMessages() {
+    var _this = this;
+
+    axios.get('/messages', this.message).then(function (response) {
+      _this.allMessages = response.data;
+    });
+  }
+});
 
 /***/ }),
 
@@ -44310,8 +44398,20 @@ var render = function() {
                       "single-line": ""
                     },
                     on: {
-                      click: function($event) {
-                        return _vm.alert("ok")
+                      keyup: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.sendMessage($event)
                       }
                     },
                     model: {
@@ -44335,11 +44435,7 @@ var render = function() {
                     {
                       staticClass: "mt-3 white--text",
                       attrs: { dark: "", small: "", color: "green" },
-                      on: {
-                        click: function($event) {
-                          return _vm.alert("ok")
-                        }
-                      }
+                      on: { click: _vm.sendMessage }
                     },
                     [_vm._v("Send")]
                   )
@@ -98682,14 +98778,15 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 /*!******************************************!*\
   !*** ./resources/js/components/Chat.vue ***!
   \******************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chat.vue?vue&type=template&id=0d66c37a& */ "./resources/js/components/Chat.vue?vue&type=template&id=0d66c37a&");
 /* harmony import */ var _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat.vue?vue&type=script&lang=js& */ "./resources/js/components/Chat.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -98719,7 +98816,7 @@ component.options.__file = "resources/js/components/Chat.vue"
 /*!*******************************************************************!*\
   !*** ./resources/js/components/Chat.vue?vue&type=script&lang=js& ***!
   \*******************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
