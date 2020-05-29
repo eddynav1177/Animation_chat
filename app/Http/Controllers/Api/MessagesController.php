@@ -19,7 +19,6 @@ class MessagesController extends Controller
     */
 
     public function sendMessage(Request $request, $destination) {
-
         if (Auth::check()) {
             $id_user    = auth()->user()->id;
 
