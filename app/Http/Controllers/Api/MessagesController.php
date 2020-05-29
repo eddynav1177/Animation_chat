@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UsersController;
 use Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Events\MessagesEvent;
+use App\Events\NewMessageEvent;
 use Carbon\Carbon;
 
 class MessagesController extends Controller
@@ -57,6 +58,7 @@ class MessagesController extends Controller
                                 'content'       => $request->content,
                                 'sender'        => $id_user,
                                 'destination'   => $destination,
+                                // 'read_at'       => Carbon::now()->toDateTimeString(),
                             ]);
 
                             // Envoi des events vers pusher
@@ -64,11 +66,16 @@ class MessagesController extends Controller
                             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
                             if ($message) {
-                                event(new MessagesEvent($message));
+                                // event(new MessagesEvent($message));
+                                // broadcast($event)->toOthers();
+                                broadcast(new NewMessageEvent($message))->toOthers();
+
+                                // return $message->load('user');
                                 return response([
                                     'message'               => $message,
                                     'statut_destination'    => $status_message_destinataire,
                                     'status_message'        => $status_message,
+                                    'user'                  => auth()->user()
                                 ]);
                             }
                         }

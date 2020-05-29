@@ -10,6 +10,6 @@ class MessagesModel extends Model
     protected $table='messages';
 
     protected $fillable = [
-        'title', 'content', 'sender', 'destination'
+        'title', 'content', 'sender', 'destination', 'read_at'
     ];
 }

@@ -20,6 +20,7 @@ class CreateMessagesTable extends Migration
             $table->integer('sender');
             $table->integer('destination');
             $table->timestamp('published_at')->nullable();
+            $table->dateTime('read_at')->nullable();
             $table->timestamps();
         });
     }

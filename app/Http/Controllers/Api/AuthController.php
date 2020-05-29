@@ -40,7 +40,9 @@ class AuthController extends Controller
             }
             return 'test';
         } else {
-            return 'invalid creation';
+            return response([
+                'message' => 'invalid creation'
+            ]);
         }
 
     }
