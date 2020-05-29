@@ -60,16 +60,15 @@ class MessagesController extends Controller
                             ]);
 
                             // Envoi des events vers pusher
-                            // event(new MessagesEvent($request->content));
 
                             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
                             if ($message) {
+                                event(new MessagesEvent($message));
                                 return response([
                                     'message'               => $message,
                                     'statut_destination'    => $status_message_destinataire,
                                     'status_message'        => $status_message,
-                                    'date_default'        => date_default_timezone_get(),
                                 ]);
                             }
                         }
