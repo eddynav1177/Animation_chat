@@ -91,77 +91,80 @@ class MessagesController extends Controller
     public function viewMessage(Request $request, $destination) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
-        // if (Auth::check()) {}
+        //
+        if (Auth::check()) {
+            $id_user        = auth()->user()->id;
+            $user_status    = new UsersController;
+            $user_status    = $user_status->get_status_user($id_user);
 
-        $id_user        = auth()->user()->id;
-        $user_status    = new UsersController;
-        $user_status    = $user_status->get_status_user($id_user);
-
-        if (!empty($user_status)) {
-            $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
-            $status_message = $status_message->original['last_message'];
-            $messages       = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $destination.') OR ( sender = ' . $destination . ' AND destination = ' . $id_user . ')')->pluck('content', 'created_at');
-            return response([
-                'messages'          => [
-                    'message' => $messages,
-                ],
-                'status_message'    => $status_message,
-                'user'              => auth()->user(),
-            ]);
+            if ($id_user != $destination) {
+                if (!empty($user_status)) {
+                    $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
+                    $status_message = $status_message->original['last_message'];
+                    // $messages       = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $destination.') OR ( sender = ' . $destination . ' AND destination = ' . $id_user . ')')->pluck('content', 'created_at');
+                    $messages       = MessagesModel::whereRaw("(sender = $id_user AND destination = $destination) OR ( sender = $destination AND destination = $id_user)")->pluck('content', 'created_at');
+                    return response([
+                        'messages'          => [
+                            'message' => $messages,
+                        ],
+                        'status_message'    => $status_message,
+                        'user'              => auth()->user(),
+                    ]);
+                }
+            } else {
+                return response([
+                    'error' => 'Impossible de lire les contenus'
+                ]);
+            }
         }
-
-        // }
 
     }
 
     public function verificationMessagesStatusByUsers(Request $request, $id_user) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
-        // if (Auth::check()) {
+        if (Auth::check()) {
+            $user_status = new UsersController;
+            $user_status = $user_status->get_status_user($id_user);
 
-            // }
+            if (!empty($user_status)) {
+                //Verification de la date d'envoi du dernier message
+                $last_message = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') AND created_at BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE) ORDER BY created_at DESC')->first();
 
-        $user_status = new UsersController;
-        $user_status = $user_status->get_status_user($id_user);
-
-        if (!empty($user_status)) {
-            //Verification de la date d'envoi du dernier message
-            $last_message = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') AND created_at BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE) ORDER BY created_at DESC')->first();
-            /*if (empty($last_message)) {
-                $logout     = new AuthController;
-                $logout     = $logout->logout($request, $id_user);
-                $last_message = '';
-            } else {
-                $last_message = $last_message->id;
-            }*/
-            $last_message = (!empty($last_message)) ? $last_message->id : '';
-            return response([
-                'last_message' => $last_message
-            ]);
+                $last_message = (!empty($last_message)) ? $last_message->id : '';
+                return response([
+                    'last_message' => $last_message
+                ]);
+            }
         }
 
     }
 
-    public function viewConversation(Request $request, $id_user) {
+    public function viewConversation(Request $request) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
-        // if (Auth::check()) {
+        if (Auth::check()) {
+            $id_user = auth()->user()->id;
+            $user_status = new UsersController;
+            $user_status = $user_status->get_status_user($id_user);
 
-        // }
-        $user_status = new UsersController;
-        $user_status = $user_status->get_status_user($id_user);
+            if (!empty($user_status)) {
+                $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
+                // Eviter d'envoyer dans la liste, la conversation contenant soit-même
+                $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination != ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
+                $conversation_message   = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
 
-        if (!empty($user_status)) {
-            $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
-            $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
-            $conversation_message   = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
+                return response([
+                    'conversation'     => $conversation_message,
+                    'status_message'   => $status_message->original['last_message'],
+                ]);
+            } else {
+                return response([
+                    'error'             => 'Impossible de lire toutes les conversations',
+                    'status_message'    => '',
+                ]);
+            }
 
-            // Controle pour ne pas retourner une conversation sur soi-meme
-
-            return response([
-                'conversation'     => $conversation_message,
-                'status_message'   => $status_message->original['last_message'],
-            ]);
         }
 
     }

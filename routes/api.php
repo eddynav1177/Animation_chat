@@ -48,9 +48,8 @@ Route::get('/message/check_message/{id}', function () {
 Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
 Route::get('/message/fetch_messages', 'Api\MessagesController@fetchMessages');
 
-// Route::get('/conversation/{id}', 'Api\ConversationsController@viewConversation');
-Route::get('/message/conversations/{id}', 'Api\MessagesController@viewConversation');
-// Route::get('/conversation/register', 'Api\ConversationsController@registerConversation');
+// Route::get('/message/conversations/{id}', 'Api\MessagesController@viewConversation');
+Route::get('/message/conversations', 'Api\MessagesController@viewConversation');
 
 
 Route::post('/animator/register_choose_fack_user', 'Api\AnimatorController@RegisterFackUserChosen');
