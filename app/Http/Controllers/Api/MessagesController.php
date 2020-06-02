@@ -67,8 +67,6 @@ class MessagesController extends Controller
                             $status_message = $status_message->original['last_message'];
 
                             if ($message) {
-                                // event(new MessagesEvent($message));
-                                // broadcast($event)->toOthers();
                                 broadcast(new NewMessageEvent($message))->toOthers();
 
                                 // return $message->load('user');
@@ -93,9 +91,8 @@ class MessagesController extends Controller
     public function viewMessage(Request $request, $destination) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
-        // if (Auth::check()) {
+        // if (Auth::check()) {}
 
-        // }
         $id_user        = auth()->user()->id;
         $user_status    = new UsersController;
         $user_status    = $user_status->get_status_user($id_user);
@@ -103,14 +100,17 @@ class MessagesController extends Controller
         if (!empty($user_status)) {
             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
             $status_message = $status_message->original['last_message'];
-            $messages       = MessagesModel::whereRaw('sender = ' . $id_user . ' AND destination = ' . $destination)->get();
-            $messages       = $messages->pluck('id');
-
+            $messages       = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $destination.') OR ( sender = ' . $destination . ' AND destination = ' . $id_user . ')')->pluck('content', 'created_at');
             return response([
-                'messages'          => $messages,
+                'messages'          => [
+                    'message' => $messages,
+                ],
                 'status_message'    => $status_message,
+                'user'              => auth()->user(),
             ]);
         }
+
+        // }
 
     }
 
@@ -153,8 +153,10 @@ class MessagesController extends Controller
 
         if (!empty($user_status)) {
             $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
-            $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' OR destination = ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
+            $conversation_message   = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $id_user . ') GROUP BY sender, destination ORDER BY destination')->get();
             $conversation_message   = ($conversation_message) ? $conversation_message->pluck(['destination']) : 0;
+
+            // Controle pour ne pas retourner une conversation sur soi-meme
 
             return response([
                 'conversation'     => $conversation_message,

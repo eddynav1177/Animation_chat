@@ -38,7 +38,7 @@
                         </div>
                     @endif
 
-                    <example></example>
+                    <example :auth_user="{{Auth::user()}}"></example>
                 </div>
             </div>
         </div>

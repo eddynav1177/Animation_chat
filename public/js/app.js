@@ -1950,49 +1950,77 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['auth_user'],
   data: function data() {
     return {
-      mesage: null,
-      allMessages: []
+      content: null,
+      allMessages: [],
+      message: [],
+      created_at: '',
+      sender: '',
+      destination: _.last(window.location.pathname.split('/')) // user : ''
+
     };
   },
   mounted: function mounted() {
-    console.log('test');
+    /*this.auth_user = this.auth_user
+    console.log('auth_user : ' + auth_user);*/
+    Echo["private"]('chat' + this.auth_user).listen('NewMessageEvent', function (e) {
+      this.allMessages.push(e.content);
+    });
   },
+
+  /*created () {
+      // user_id = this.auth_user.id
+      console.log(this.auth_user.id)
+  },*/
   methods: {
     sendMessage: function sendMessage() {
-      if (!this.message) {
+      var _this = this;
+
+      if (!this.content) {
         return alert('Entrez un message');
       } // this.allMessages.push(this.message);
+      // axios.post('/api/message/chat/'+this.auth_user.id, {mesage: this.message})
 
 
-      axios.post('/api/message/chat/1', {
-        mesage: this.message
+      axios.post('/api/message/chat/' + this.destination, {
+        content: this.content
       }).then(function (response) {
-        console.log(response.data);
+        console.log('response : ' + response.data);
+        _this.content = ''; // this.allMessages.push(response.m)
+        // this.created_at = response.data.message.created_at;
+
+        _this.fetchMessages();
+
+        console.log('this.messages : ' + _this.messages);
+      })["catch"](function (err) {
+        return console.log(err.response);
+      });
+    },
+    scrollToEnd: function scrollToEnd() {
+      window.scrollTo(0, 99999);
+    },
+    fetchMessages: function fetchMessages() {
+      var _this2 = this;
+
+      axios.get('/api/message/view_message/' + this.destination, this.content).then(function (response) {
+        // this.allMessages    = response.data.messages;
+        _this2.allMessages = response.data.messages.message;
+        console.log(_this2.allMessages);
+        _this2.user = response.data.user.name;
+        console.log('user : ' + _this2.user);
       });
     }
   },
-  fechMessages: function fechMessages() {
-    var _this = this;
+  created: function created() {
+    this.fetchMessages();
+    console.log(this.auth_user.id);
 
-    axios.get('/messages', this.message).then(function (response) {
-      _this.allMessages = response.data;
-    });
+    var destination = _.last(window.location.pathname.split('/'));
+
+    console.log('id : ' + destination);
   }
 });
 
@@ -44292,81 +44320,38 @@ var render = function() {
                     _vm._v("\n                    Group chat\n                ")
                   ]),
                   _vm._v(" "),
-                  _c("v-divider"),
-                  _vm._v(" "),
                   _vm._l(_vm.allMessages, function(item, index) {
                     return _c(
-                      "v-list-title",
-                      { key: index, staticClass: "p-3" },
+                      "div",
+                      { key: index },
                       [
                         _c(
-                          "v-layout",
+                          "v-chip",
                           {
-                            attrs: { "align-end": index % 2 == 0, column: "" }
+                            attrs: {
+                              color:
+                                _vm.user === _vm.auth_user ? "red" : "blue",
+                              "text-color": "white"
+                            }
                           },
                           [
-                            _c(
-                              "v-flex",
-                              [
-                                _c(
-                                  "v-layout",
-                                  { attrs: { column: "" } },
-                                  [
-                                    _c("v-flex", [
-                                      _c(
-                                        "span",
-                                        { staticClass: "small font-italic" },
-                                        [_vm._v("Envoyeur")]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-flex",
-                                      [
-                                        _c(
-                                          "v-chip",
-                                          {
-                                            attrs: {
-                                              color:
-                                                index % 2 == 0
-                                                  ? "red"
-                                                  : "green",
-                                              "text-color": "white"
-                                            }
-                                          },
-                                          [
-                                            _c("v-list-title-content", [
-                                              _vm._v(_vm._s(item.message))
-                                            ])
-                                          ],
-                                          1
-                                        )
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-flex",
-                                      { staticClass: "caption font-italic" },
-                                      [
-                                        _vm._v(
-                                          "\n                                    2020-10-16\n                                "
-                                        )
-                                      ]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
+                            item != ""
+                              ? _c("div", [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(item) +
+                                      "\n                        "
+                                  )
+                                ])
+                              : _vm._e()
+                          ]
                         )
                       ],
                       1
                     )
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c("v-divider")
                 ],
                 2
               )
@@ -44415,11 +44400,11 @@ var render = function() {
                       }
                     },
                     model: {
-                      value: _vm.message,
+                      value: _vm.content,
                       callback: function($$v) {
-                        _vm.message = $$v
+                        _vm.content = $$v
                       },
-                      expression: "message"
+                      expression: "content"
                     }
                   })
                 ],
@@ -98664,12 +98649,14 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuetify/dist/vuetify.min.css */ "./node_modules/vuetify/dist/vuetify.min.css");
-/* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuetify/dist/vuetify.min.css */ "./node_modules/vuetify/dist/vuetify.min.css");
+/* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_3__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -98680,7 +98667,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
 
-Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_2___default.a);
 
 /**
  * The following block of code may be used to automatically register your
@@ -98692,16 +98680,16 @@ Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
-Vue.component('example', __webpack_require__(/*! ./components/Chat.vue */ "./resources/js/components/Chat.vue")["default"]);
-Vue.component('messages', __webpack_require__(/*! ./components/SendMessage.vue */ "./resources/js/components/SendMessage.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('example', __webpack_require__(/*! ./components/Chat.vue */ "./resources/js/components/Chat.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('messages', __webpack_require__(/*! ./components/SendMessage.vue */ "./resources/js/components/SendMessage.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-var app = new Vue({
+var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
 
@@ -98769,7 +98757,9 @@ window.Echo = new Echo({
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: '5f9a91e9b32d04b2f253'
+  key: '5f9a91e9b32d04b2f253',
+  cluster: 'eu',
+  encrypted: true
 });
 
 /***/ }),
@@ -98778,15 +98768,14 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 /*!******************************************!*\
   !*** ./resources/js/components/Chat.vue ***!
   \******************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chat.vue?vue&type=template&id=0d66c37a& */ "./resources/js/components/Chat.vue?vue&type=template&id=0d66c37a&");
 /* harmony import */ var _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat.vue?vue&type=script&lang=js& */ "./resources/js/components/Chat.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -98816,7 +98805,7 @@ component.options.__file = "resources/js/components/Chat.vue"
 /*!*******************************************************************!*\
   !*** ./resources/js/components/Chat.vue?vue&type=script&lang=js& ***!
   \*******************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

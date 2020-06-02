@@ -8,6 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import Vue from 'vue'
 import Pusher from "pusher-js"
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
@@ -37,5 +38,5 @@ Vue.component ('messages', require ('./components/SendMessage.vue').default);
  */
 
 const app = new Vue({
-    el: '#app',
+    el: '#app'
 });

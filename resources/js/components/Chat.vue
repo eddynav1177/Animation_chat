@@ -6,28 +6,15 @@
                     <v-subheader>
                         Group chat
                     </v-subheader>
+                    <div v-for="(item, index) in allMessages" :key="index">
+                        <v-chip :color="(user === auth_user) ? 'red' : 'blue'" text-color="white">
+                            <div v-if="item != ''">
+                                {{ item }}
+                            </div>
+                        </v-chip>
+                        <!-- <p>Envoyé par : {{ sender }}, le {{ created_at }}</p> -->
+                    </div>
                     <v-divider></v-divider>
-                    <v-list-title class="p-3" v-for="(item, index) in allMessages" :key="index">
-                        <v-layout
-                            :align-end="(index%2==0)" column>
-                            <v-flex>
-                                <v-layout column>
-                                    <v-flex>
-                                        <span class="small font-italic">Envoyeur</span>
-                                    </v-flex>
-                                    <v-flex>
-                                        <v-chip
-                                            :color="(index%2==0)?'red':'green'" text-color="white">
-                                            <v-list-title-content>{{item.message}}</v-list-title-content>
-                                        </v-chip>
-                                    </v-flex>
-                                    <v-flex class="caption font-italic">
-                                        2020-10-16
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex>
-                        </v-layout>
-                    </v-list-title>
                 </v-list>
             </v-card>
         </v-flex>
@@ -38,7 +25,7 @@
                         row=2
                         label='Enter message'
                         single-line
-                        v-model="message"
+                        v-model="content"
                         @keyup.enter="sendMessage"
 
                     >
@@ -55,33 +42,72 @@
 
 <script>
     export default {
+        props: ['auth_user'],
         data () {
             return {
-                mesage: null,
-                allMessages: []
+                content: null,
+                allMessages: [],
+                message: [],
+                created_at: '',
+                sender: '',
+                destination : _.last( window.location.pathname.split( '/' ) ),
+                // user : ''
+
             }
         },
         mounted() {
-            console.log('test');
+            /*this.auth_user = this.auth_user
+            console.log('auth_user : ' + auth_user);*/
+            Echo.private('chat'+this.auth_user)
+            .listen('NewMessageEvent', function (e) {
+                this.allMessages.push(e.content)
+            })
         },
+        /*created () {
+            // user_id = this.auth_user.id
+            console.log(this.auth_user.id)
+        },*/
         methods: {
             sendMessage() {
-                if (!this.message) {
+                if (!this.content) {
                     return alert('Entrez un message');
                 }
 
                 // this.allMessages.push(this.message);
-                axios.post('/api/message/chat/1', {mesage: this.message})
+                // axios.post('/api/message/chat/'+this.auth_user.id, {mesage: this.message})
+                axios.post('/api/message/chat/'+this.destination, {content: this.content})
                     .then(response => {
-                        console.log(response.data);
-                    });
+                        console.log('response : ' + response.data);
+                        this.content = '';
+                        // this.allMessages.push(response.m)
+                        // this.created_at = response.data.message.created_at;
+
+                        this.fetchMessages();
+                        console.log('this.messages : ' + this.messages);
+                    })
+                    .catch((err) => console.log(err.response));
             },
-        },
-        fechMessages() {
-            axios.get('/messages', this.message)
+            scrollToEnd() {
+                window.scrollTo(0, 99999);
+            },
+            fetchMessages() {
+                axios.get('/api/message/view_message/'+this.destination, this.content)
                 .then(response => {
-                    this.allMessages    = response.data;
+                    // this.allMessages    = response.data.messages;
+                    this.allMessages    = response.data.messages.message;
+                    console.log(this.allMessages);
+                    this.user = response.data.user.name
+                    console.log('user : ' + this.user);
                 });
+            }
+        },
+
+        created() {
+            this.fetchMessages();
+            console.log(this.auth_user.id);
+            var destination = _.last( window.location.pathname.split( '/' ) );
+            console.log('id : ' + destination)
         }
+
     }
 </script>

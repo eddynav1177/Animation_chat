@@ -42,7 +42,11 @@ Route::get('/home/list_animator_connected/{id}', 'Api\UsersController@listAnimat
 
 Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
 Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
+Route::get('/message/check_message/{id}', function () {
+    return view('home');
+});
 Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
+Route::get('/message/fetch_messages', 'Api\MessagesController@fetchMessages');
 
 // Route::get('/conversation/{id}', 'Api\ConversationsController@viewConversation');
 Route::get('/message/conversations/{id}', 'Api\MessagesController@viewConversation');
