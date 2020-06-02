@@ -102,9 +102,7 @@ class MessagesController extends Controller
                     $messages       = MessagesModel::whereRaw("(sender = $id_user AND destination = $destination) OR ( sender = $destination AND destination = $id_user)")->pluck('content', 'created_at');
                     $messages       = ($messages->count() > 0) ? $messages : 'Aucun message';
                     return response([
-                        'messages'          => [
-                            'message'       => $messages,
-                        ],
+                        'messages'          => $messages,
                         'status_message'    => $status_message,
                         'user'              => auth()->user(),
                     ]);

@@ -85,7 +85,7 @@
             fetchMessages() {
                 axios.get('/api/message/view_message/'+this.destination, this.content)
                 .then(response => {
-                    this.allMessages    = response.data.messages.message;
+                    this.allMessages    = response.data.messages;
                     this.user = response.data.user.name
                 });
             }

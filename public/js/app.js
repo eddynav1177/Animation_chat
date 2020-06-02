@@ -1997,7 +1997,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('/api/message/view_message/' + this.destination, this.content).then(function (response) {
-        _this2.allMessages = response.data.messages.message;
+        _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
       });
     }
