@@ -1964,7 +1964,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     window.Echo["private"]('chat').listen('NewMessageEvent', function (e) {
-      this.allMessages.push(e.content);
+      this.allMessages.push(e.content), console.log('send');
     });
   },
   methods: {

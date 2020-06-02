@@ -57,7 +57,8 @@
         mounted() {
             window.Echo.private('chat')
             .listen('NewMessageEvent', function (e) {
-                this.allMessages.push(e.content)
+                this.allMessages.push(e.content),
+                console.log('send')
             })
         },
         methods: {

@@ -24,6 +24,7 @@ class MessagesController extends Controller
     }*/
 
     public function sendMessage(Request $request, $destination) {
+
         if (Auth::check()) {
             $id_user    = auth()->user()->id;
 
@@ -65,11 +66,11 @@ class MessagesController extends Controller
                                 // 'read_at'       => Carbon::now()->toDateTimeString(),
                             ]);
 
-                            // Envoi des events vers pusher
                             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
 
                             if ($message) {
+                                // Envoi des events vers pusher
                                 broadcast(new NewMessageEvent($message))->toOthers();
 
                                 return response([
@@ -84,11 +85,11 @@ class MessagesController extends Controller
                 }
             }
         }
+
     }
 
     public function viewMessage(Request $request, $destination) {
 
-        // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         if (Auth::check()) {
             $id_user        = auth()->user()->id;
             $user_status    = new UsersController;
@@ -97,11 +98,12 @@ class MessagesController extends Controller
             if ($id_user != $destination) {
                 if (!empty($user_status)) {
                     $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
-                    $status_message = $status_message->original['last_message'];
+                    $status_message = ($status_message) ? $status_message->original['last_message'] : '';
                     $messages       = MessagesModel::whereRaw("(sender = $id_user AND destination = $destination) OR ( sender = $destination AND destination = $id_user)")->pluck('content', 'created_at');
+                    $messages       = ($messages->count() > 0) ? $messages : 'Aucun message';
                     return response([
                         'messages'          => [
-                            'message' => $messages,
+                            'message'       => $messages,
                         ],
                         'status_message'    => $status_message,
                         'user'              => auth()->user(),
@@ -135,9 +137,9 @@ class MessagesController extends Controller
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         if (Auth::check()) {
-            $id_user = auth()->user()->id;
-            $user_status = new UsersController;
-            $user_status = $user_status->get_status_user($id_user);
+            $id_user        = auth()->user()->id;
+            $user_status    = new UsersController;
+            $user_status    = $user_status->get_status_user($id_user);
 
             if (!empty($user_status)) {
                 $status_message         = $this->verificationMessagesStatusByUsers($request, $id_user);
