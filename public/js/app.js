@@ -1959,44 +1959,35 @@ __webpack_require__.r(__webpack_exports__);
       message: [],
       created_at: '',
       sender: '',
-      destination: _.last(window.location.pathname.split('/')) // user : ''
-
+      destination: _.last(window.location.pathname.split('/'))
     };
   },
   mounted: function mounted() {
-    /*this.auth_user = this.auth_user
-    console.log('auth_user : ' + auth_user);*/
-    Echo["private"]('chat' + this.auth_user).listen('NewMessageEvent', function (e) {
+    window.Echo["private"]('chat').listen('NewMessageEvent', function (e) {
       this.allMessages.push(e.content);
     });
   },
-
-  /*created () {
-      // user_id = this.auth_user.id
-      console.log(this.auth_user.id)
-  },*/
   methods: {
     sendMessage: function sendMessage() {
       var _this = this;
 
       if (!this.content) {
         return alert('Entrez un message');
-      } // this.allMessages.push(this.message);
-      // axios.post('/api/message/chat/'+this.auth_user.id, {mesage: this.message})
-
+      }
 
       axios.post('/api/message/chat/' + this.destination, {
         content: this.content
       }).then(function (response) {
-        console.log('response : ' + response.data);
-        _this.content = ''; // this.allMessages.push(response.m)
+        console.log('response2 : ' + response.data);
+        _this.content = ''; // this.allMessages.push(response.data.message)
+        // console.log('allMessages : ' + this.allMessages);
         // this.created_at = response.data.message.created_at;
 
         _this.fetchMessages();
 
-        console.log('this.messages : ' + _this.messages);
+        setTimeout(_this.scrollToEnd, 100);
       })["catch"](function (err) {
-        return console.log(err.response);
+        return console.log('err : ' + err.response);
       });
     },
     scrollToEnd: function scrollToEnd() {
@@ -2006,21 +1997,15 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('/api/message/view_message/' + this.destination, this.content).then(function (response) {
-        // this.allMessages    = response.data.messages;
         _this2.allMessages = response.data.messages.message;
-        console.log(_this2.allMessages);
         _this2.user = response.data.user.name;
-        console.log('user : ' + _this2.user);
       });
     }
   },
   created: function created() {
     this.fetchMessages();
-    console.log(this.auth_user.id);
 
     var destination = _.last(window.location.pathname.split('/'));
-
-    console.log('id : ' + destination);
   }
 });
 
@@ -98693,6 +98678,10 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
 });
 
+pusher_js__WEBPACK_IMPORTED_MODULE_1___default.a.log = function (message) {
+  window.console.log(message);
+};
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -98759,7 +98748,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: '5f9a91e9b32d04b2f253',
   cluster: 'eu',
-  encrypted: true
+  encrypted: true,
+  forceTLS: true
 });
 
 /***/ }),

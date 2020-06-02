@@ -19,6 +19,10 @@ class MessagesController extends Controller
     MessagesController: Controller pour la gestion des messages envoyés par les client et/ou les animatrices
     */
 
+    /*public function __construct() {
+        $this->middleware('auth:api');
+    }*/
+
     public function sendMessage(Request $request, $destination) {
         if (Auth::check()) {
             $id_user    = auth()->user()->id;
@@ -62,14 +66,12 @@ class MessagesController extends Controller
                             ]);
 
                             // Envoi des events vers pusher
-
                             $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                             $status_message = $status_message->original['last_message'];
 
                             if ($message) {
                                 broadcast(new NewMessageEvent($message))->toOthers();
 
-                                // return $message->load('user');
                                 return response([
                                     'message'               => $message,
                                     'statut_destination'    => $status_message_destinataire,
@@ -80,10 +82,6 @@ class MessagesController extends Controller
                         }
                     }
                 }
-            } else {
-                return response([
-                    'data' => false
-                ]);
             }
         }
     }
@@ -91,7 +89,6 @@ class MessagesController extends Controller
     public function viewMessage(Request $request, $destination) {
 
         // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
-        //
         if (Auth::check()) {
             $id_user        = auth()->user()->id;
             $user_status    = new UsersController;
@@ -101,7 +98,6 @@ class MessagesController extends Controller
                 if (!empty($user_status)) {
                     $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
                     $status_message = $status_message->original['last_message'];
-                    // $messages       = MessagesModel::whereRaw('(sender = ' . $id_user . ' AND destination = ' . $destination.') OR ( sender = ' . $destination . ' AND destination = ' . $id_user . ')')->pluck('content', 'created_at');
                     $messages       = MessagesModel::whereRaw("(sender = $id_user AND destination = $destination) OR ( sender = $destination AND destination = $id_user)")->pluck('content', 'created_at');
                     return response([
                         'messages'          => [
@@ -111,10 +107,6 @@ class MessagesController extends Controller
                         'user'              => auth()->user(),
                     ]);
                 }
-            } else {
-                return response([
-                    'error' => 'Impossible de lire les contenus'
-                ]);
             }
         }
 
@@ -122,7 +114,6 @@ class MessagesController extends Controller
 
     public function verificationMessagesStatusByUsers(Request $request, $id_user) {
 
-        // TODO: à décommenter et retirer la récupération de l'user connecté via la méthode get_status_user de UsersController
         if (Auth::check()) {
             $user_status = new UsersController;
             $user_status = $user_status->get_status_user($id_user);
@@ -158,13 +149,7 @@ class MessagesController extends Controller
                     'conversation'     => $conversation_message,
                     'status_message'   => $status_message->original['last_message'],
                 ]);
-            } else {
-                return response([
-                    'error'             => 'Impossible de lire toutes les conversations',
-                    'status_message'    => '',
-                ]);
             }
-
         }
 
     }

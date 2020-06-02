@@ -52,12 +52,12 @@ window.Echo = new Echo({
 
 import Echo from "laravel-echo";
 import Pusher from 'pusher-js';
-
 window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '5f9a91e9b32d04b2f253',
     cluster: 'eu',
-    encrypted: true
+    encrypted: true,
+    forceTLS: true
 });

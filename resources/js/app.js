@@ -15,6 +15,8 @@ Vue.use(Vuetify)
 
 import 'vuetify/dist/vuetify.min.css'
 
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -40,3 +42,5 @@ Vue.component ('messages', require ('./components/SendMessage.vue').default);
 const app = new Vue({
     el: '#app'
 });
+
+Pusher.log = function (message) { window.console.log(message); }
