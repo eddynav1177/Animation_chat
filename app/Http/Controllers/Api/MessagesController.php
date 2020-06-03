@@ -19,9 +19,9 @@ class MessagesController extends Controller
     MessagesController: Controller pour la gestion des messages envoyés par les client et/ou les animatrices
     */
 
-    /*public function __construct() {
-        $this->middleware('auth:api');
-    }*/
+    public function __construct() {
+        $this->middleware('auth');
+    }
 
     public function sendMessage(Request $request, $destination) {
 

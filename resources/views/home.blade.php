@@ -25,12 +25,15 @@
 @extends('layouts.app')
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">
+                    @if (Auth::check())
+                        {{ Auth::user()->name }}
+                    @endif
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -38,7 +41,6 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
                     <example :auth_user="{{Auth::user()}}"></example>
                 </div>
             </div>
