@@ -54,7 +54,7 @@ import Echo from "laravel-echo";
 import Pusher from 'pusher-js';
 window.Pusher = require('pusher-js');
 
-var pusher = new Pusher('5f9a91e9b32d04b2f253', {
+/*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
 authEndpoint: 'http://animation.test/api/message/check_message/5',
 cluster: 'eu',
 encrypted: true,
@@ -69,7 +69,7 @@ var channel = pusher.subscribe('chat');
 
 channel.bind('message-1 sended', function (data) {
     alert(JSON.stringify(data));
-});
+});*/
 
 window.Echo = new Echo({
     broadcaster: 'pusher',

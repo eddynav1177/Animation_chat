@@ -50,7 +50,7 @@
                 message: [],
                 created_at: '',
                 sender: '',
-                destination : _.last( window.location.pathname.split( '/' ) ),
+                destination : _.last( window.location.pathname.split('/')),
 
             }
         },
@@ -67,7 +67,7 @@
                     return alert('Entrez un message');
                 }
 
-                axios.post('/api/message/chat/'+this.destination, {content: this.content})
+                axios.post('/api/message/chat/'+Number(this.destination), {content: this.content})
                     .then(response => {
                         console.log('response2 : ' + response.data);
                         this.content = '';
@@ -76,6 +76,7 @@
                         // this.created_at = response.data.message.created_at;
                         this.fetchMessages();
                         setTimeout(this.scrollToEnd, 100)
+                        console.log('type : ' + gettype(destination))
                     })
                     .catch((err) => console.log('err : ' + err.response));
             },
@@ -83,7 +84,7 @@
                 window.scrollTo(0, 99999);
             },
             fetchMessages() {
-                axios.get('/api/message/view_message/'+this.destination, this.content)
+                axios.get('/api/message/view_message/'+Number(this.destination), this.content)
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user = response.data.user.name

@@ -40,7 +40,31 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function isOnline() {
-        return Cache::has('user-is-online-' . $this->id);
+    public static function get_users_connected($id_user, $is_admin = '') {
+
+        // Verifier si l'id_user est en statut online
+        $user  = User::where(['isonline' => 1, 'id' => $id_user])->get();
+        if ($user->count() > 0) {
+
+            // Lister les autres users connectés à part l'user en question
+            if (!empty($is_admin)) {
+                $users  = User::where(['isonline'=> 1, 'is_admin'=> 0])->where('id', '!=', $id_user)->pluck('id');
+            } else {
+                $users  = User::where(['isonline' => 1])->pluck('id');
+            }
+
+            $string_to_replace  = ["[","]","\""];
+            $users              = str_replace($string_to_replace, '', $users);
+            $users              = explode(',', $users);
+
+            return $users;
+        }
+    }
+
+    public static function get_status_user($user) {
+        $status = User::where(['isonline' => 1, 'id' => $user])->first();
+        if (!empty($status->id)) {
+            return $status->id;
+        }
     }
 }

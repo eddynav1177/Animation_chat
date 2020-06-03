@@ -11,10 +11,7 @@ class MessagesModel extends Model
     protected $table='messages';
 
     protected $fillable = [
-        'title', 'content', 'sender', 'destination', 'read_at'
+        'title', 'content', 'sender', 'destination', 'read_at', 'id_conversation'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
 }

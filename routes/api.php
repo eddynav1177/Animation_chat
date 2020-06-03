@@ -21,7 +21,6 @@ UsersController : Gestion des clients et des animatrices après auth
 FackUsersController : Controleur pour la gestion des faux utilisateurs incarnés par les animatrices
 AnimatorController: Controleur pour la gestion des animatrices
 Register Controller : Gestion de l'inscription des clients et des animatrices
-ClientsController: Controleur pour la gestion des clients
 ConversationsController: Controleur pour la gestion des conversations entre les clients et les animatrices
 */
 
@@ -53,14 +52,15 @@ Route::get('/home/list_users_connected/{id}', 'Api\UsersController@listUsersConn
 Route::get('/home/list_animator_connected/{id}', 'Api\UsersController@listAnimatorsConnected');
 
 Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
+Route::get('/message/conversations', 'Api\ConversationsController@viewConversations');
 
 // Test event
 Route::get('/message/check_message/{id}', function () {
     return view('home');
 })->middleware('auth');
 
-Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
-Route::get('/message/conversations', 'Api\MessagesController@viewConversation');
+// Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
+// Route::get('/message/conversations', 'Api\MessagesController@viewConversation');
 /*
 ------------End Get------------
 */
@@ -68,8 +68,7 @@ Route::get('/message/conversations', 'Api\MessagesController@viewConversation');
 /*Route::get('/animator/change_animator', 'Api\AnimatorController@changeAnimatorIfNotPresent');
 Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');*/
 
-// Route::get('/fack_users/show_profile/{id}', 'Api\FackUsersController@showProfile');
-/*Route::get('/home/show_profile_client/{id}', 'Api\ClientsController@showProfileUser');
+/* Route::get('/fack_users/show_profile/{id}', 'Api\FackUsersController@showProfile');
 Route::get('/home/show_profile_animator/{id}', 'Api\AnimatorController@showProfileAnimator');*/
 
 // Route::view('/home', 'home')->middleware('auth');
