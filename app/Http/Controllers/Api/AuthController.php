@@ -38,7 +38,6 @@ class AuthController extends Controller
                     'access_token'  => $access_token
                 ]);
             }
-            return 'test';
         } else {
             return response([
                 'message' => 'invalid creation'

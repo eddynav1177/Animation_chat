@@ -67,20 +67,20 @@ class MessagesController extends Controller
                             }
 
                             // Vérification si la conversation existe déjà ou non
-                            $conversation = ConversationsModel::where(['id_user' => $id_user, 'destination' => $destination])->orWhere(['id_user' => $destination, 'destination' => $id_user])->first();
+                            $conversation           = ConversationsModel::where(['id_user' => $id_user, 'destination' => $destination])->orWhere(['id_user' => $destination, 'destination' => $id_user])->first();
 
                             if (!empty($conversation)) {
-                                $id_conversation = $conversation->id;
+                                $id_conversation        = $conversation->id;
                             } else {
                                 // Creation de la conversation
-                                $create_conversation = ConversationsModel::create([
+                                $create_conversation    = ConversationsModel::create([
                                     'id_user'       => $id_user,
                                     'destination'   => $destination,
                                 ]);
-                                $id_conversation = $create_conversation->id;
+                                $id_conversation        = $create_conversation->id;
                             }
 
-                            $message           = MessagesModel::create([
+                            $message                = MessagesModel::create([
                                 'title'             => $request->title,
                                 'content'           => $request->content,
                                 'sender'            => $id_user,
@@ -90,7 +90,7 @@ class MessagesController extends Controller
                             ]);
 
                             // Verification de la derniere date d'envoi d'un message
-                            $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
+                            $status_message         = $this->verificationMessagesStatusByUsers($request, $destination);
 
                             if ($message) {
                                 // Envoi des events vers pusher
