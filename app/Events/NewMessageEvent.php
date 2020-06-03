@@ -54,6 +54,6 @@ class NewMessageEvent implements ShouldBroadcast
     }
 
     public function broadcastAs() {
-        return 'message.send';
+        return 'message-'.$this->message->id.' sended';
     }
 }

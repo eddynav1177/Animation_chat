@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MessagesModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Events\MessageDeliveredEvent;
 
 class MessageDelivredController extends Controller
 {
