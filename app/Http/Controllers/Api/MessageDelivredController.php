@@ -11,6 +11,8 @@ use App\Events\MessageDeliveredEvent;
 class MessageDelivredController extends Controller
 {
     //
+    public $message;
+
     public function __invoke(MessagesModel $message)
     {
         $message->read_at = Carbon::now();

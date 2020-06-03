@@ -19,7 +19,7 @@ class BroadcastServiceProvider extends ServiceProvider
 
         require base_path('routes/channels.php');
 
-        Broadcast::channel('chat-*', function ($user, $message) {
+        Broadcast::channel('chat', function ($message) {
             // return (int) $user->id === (int) $message;
             return true;
         });

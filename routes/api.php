@@ -57,7 +57,7 @@ Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
 // Test event
 Route::get('/message/check_message/{id}', function () {
     return view('home');
-});
+})->middleware('auth');
 
 Route::get('/message/status_message/{id}', 'Api\MessagesController@verificationMessagesStatusByUsers');
 Route::get('/message/conversations', 'Api\MessagesController@viewConversation');

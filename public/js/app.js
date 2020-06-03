@@ -98744,6 +98744,20 @@ window.Echo = new Echo({
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+var pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_1___default.a('5f9a91e9b32d04b2f253', {
+  authEndpoint: 'http://animation.test/api/message/check_message/5',
+  cluster: 'eu',
+  encrypted: true,
+  auth: {
+    headers: {
+      Authorization: 'Test autorisation'
+    }
+  }
+});
+var channel = pusher.subscribe('chat');
+channel.bind('message-1 sended', function (data) {
+  alert(JSON.stringify(data));
+});
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: '5f9a91e9b32d04b2f253',
