@@ -13,6 +13,9 @@ class UsersController extends Controller
     /*
     UsersController : Controller pour tout type d'utilisateurs connectés
     */
+    public function __construct() {
+        $this->middleware('auth');
+    }
 
     public function get_users_connected($id_user, $is_admin = '') {
 
