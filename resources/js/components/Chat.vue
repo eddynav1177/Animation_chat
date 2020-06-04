@@ -7,7 +7,7 @@
                         Group chat
                     </v-subheader>
                     <div v-for="(item, index) in allMessages" :key="index">
-                        <v-chip :color="(user === auth_user) ? 'red' : 'blue'" text-color="white">
+                        <v-chip :color="(user === auth_user) ? 'red' : 'blue'" text-color="green">
                             <div v-if="item != ''">
                                 {{ item }}
                             </div>
@@ -23,7 +23,7 @@
                 <v-flex xs6 justify-center align-center>
                     <v-text-field
                         row=2
-                        label='Enter message'
+                        label='Entrez un message'
                         single-line
                         v-model="content"
                         @keyup.enter="sendMessage"
@@ -46,6 +46,7 @@
         data () {
             return {
                 content: null,
+                csrfToken: null,
                 allMessages: [],
                 message: [],
                 created_at: '',
@@ -94,6 +95,7 @@
         },
 
         created() {
+            this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
             var destination = _.last( window.location.pathname.split( '/' ) );
         }

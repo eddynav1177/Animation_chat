@@ -54,30 +54,13 @@ import Echo from "laravel-echo";
 import Pusher from 'pusher-js';
 window.Pusher = require('pusher-js');
 
-/*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
-authEndpoint: 'http://animation.test/api/message/check_message/5',
-cluster: 'eu',
-encrypted: true,
-auth: {
-    headers: {
-        Authorization: 'Test autorisation'
-    }
-}
-});
-
-var channel = pusher.subscribe('chat');
-
-channel.bind('message-1 sended', function (data) {
-    alert(JSON.stringify(data));
-});*/
-
 window.Echo = new Echo({
-    // authEndpoint: '../check_message/5',
+    authEndpoint: '/broadcasting/auth',
     broadcaster: 'pusher',
     key: '5f9a91e9b32d04b2f253',
     cluster: 'eu',
     encrypted: true,
-    forceTLS: true
+    forceTLS: true,
 });
 /*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
     cluster: 'eu',

@@ -1955,6 +1955,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       content: null,
+      csrfToken: null,
       allMessages: [],
       message: [],
       created_at: '',
@@ -2005,6 +2006,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
+    this.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     this.fetchMessages();
 
     var destination = _.last(window.location.pathname.split('/'));
@@ -44318,7 +44320,7 @@ var render = function() {
                             attrs: {
                               color:
                                 _vm.user === _vm.auth_user ? "red" : "blue",
-                              "text-color": "white"
+                              "text-color": "green"
                             }
                           },
                           [
@@ -44366,7 +44368,7 @@ var render = function() {
                   _c("v-text-field", {
                     attrs: {
                       row: "2",
-                      label: "Enter message",
+                      label: "Entrez un message",
                       "single-line": ""
                     },
                     on: {
@@ -98742,25 +98744,8 @@ window.Echo = new Echo({
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-/*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
-authEndpoint: 'http://animation.test/api/message/check_message/5',
-cluster: 'eu',
-encrypted: true,
-auth: {
-    headers: {
-        Authorization: 'Test autorisation'
-    }
-}
-});
-
-var channel = pusher.subscribe('chat');
-
-channel.bind('message-1 sended', function (data) {
-    alert(JSON.stringify(data));
-});*/
-
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  // authEndpoint: '../check_message/5',
+  authEndpoint: '/broadcasting/auth',
   broadcaster: 'pusher',
   key: '5f9a91e9b32d04b2f253',
   cluster: 'eu',

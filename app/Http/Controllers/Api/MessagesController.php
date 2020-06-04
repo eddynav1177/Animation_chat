@@ -21,7 +21,7 @@ class MessagesController extends Controller
         $this->middleware('auth');
     }
 
-    private function verificationMessagesStatusByUsers(Request $request, $id_user) {
+    private function verificationMessagesStatusByUsers($id_user) {
 
         if (Auth::check()) {
             $user_status = User::get_status_user($id_user);
@@ -70,7 +70,7 @@ class MessagesController extends Controller
                             if (!empty($conversation)) {
                                 $id_conversation        = $conversation->id;
                             } else {
-                                // Creation de la conversation
+                                // Création de la conversation
                                 $create_conversation    = ConversationsModel::create([
                                     'id_user'       => $id_user,
                                     'destination'   => $destination,
@@ -87,8 +87,8 @@ class MessagesController extends Controller
                                 // 'read_at'       => Carbon::now()->toDateTimeString(),
                             ]);
 
-                            // Verification de la derniere date d'envoi d'un message
-                            $status_message         = $this->verificationMessagesStatusByUsers($request, $destination);
+                            // Vérification de la derniere date d'envoi d'un message
+                            $status_message         = $this->verificationMessagesStatusByUsers($destination);
 
                             if ($message) {
                                 // Envoi des events vers pusher
@@ -103,7 +103,11 @@ class MessagesController extends Controller
                         }
                     }
                 }
-            }
+            }/* else {
+                return response([
+                    'messages' => false
+                ]);
+            }*/
         }
 
     }
@@ -114,7 +118,7 @@ class MessagesController extends Controller
             $id_user        = auth()->user()->id;
 
             if ($id_user != $destination) {
-                $status_message = $this->verificationMessagesStatusByUsers($request, $destination);
+                $status_message = $this->verificationMessagesStatusByUsers($destination);
                 $messages       = MessagesModel::where(['sender' => $id_user, 'destination' => $destination])->orWhere(['sender' => $destination, 'destination' => $id_user])->pluck('content', 'created_at');
                 $messages       = ($messages) ? $messages : 'Aucun message';
                 return response([

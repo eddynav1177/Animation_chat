@@ -18,6 +18,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat', function ($user) {
-    // return auth()->check();
-    return true;
+    // return true;
+    return auth()->check();
 });
