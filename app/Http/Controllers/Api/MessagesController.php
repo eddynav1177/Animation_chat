@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\MessagesModel;
 use App\User;
 use Auth;
-use App\Http\Controllers\Api\AuthController;
-use App\Events\MessagesEvent;
 use App\Events\NewMessageEvent;
 use App\Models\ConversationsModel;
 use Carbon\Carbon;
@@ -30,7 +28,7 @@ class MessagesController extends Controller
 
             if (!empty($user_status)) {
                 //Verification de la date d'envoi du dernier message
-                $last_message = MessagesModel::where(['sender' => $id_user])->orWhere(['destination' => $id_user])->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')->orderByDesc('created_at')->first();
+                $last_message = MessagesModel::where(['sender' => $id_user])->orWhere(['destination' => $id_user])->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')->orderBy('created_at', 'desc')->first();
 
                 $last_message = (!empty($last_message)) ? $last_message->id : '';
                 return $last_message;
@@ -44,7 +42,7 @@ class MessagesController extends Controller
         if (Auth::check()) {
             $id_user    = auth()->user()->id;
 
-            // Envoyer un message uniquement si l'id_user est différent de la destination
+            // Envoi d'un message uniquement si l'id_user est différent de la destination
             if ($id_user != $destination) {
                 // Liste de tous les utilisateurs connectés pour l'envoi des messages
                 $list_users     = User::get_users_connected($id_user);

@@ -72,9 +72,22 @@ channel.bind('message-1 sended', function (data) {
 });*/
 
 window.Echo = new Echo({
+    // authEndpoint: '../check_message/5',
     broadcaster: 'pusher',
     key: '5f9a91e9b32d04b2f253',
     cluster: 'eu',
     encrypted: true,
     forceTLS: true
 });
+/*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
+    cluster: 'eu',
+    encrypted: true
+});
+var channel = pusher.subscribe('chat');
+channel.bind('NewMessageEvent', function(data) {
+    alert(data);
+    console.log(data);
+});*/
+
+Pusher.log = function (message) { window.console.log('message : ' + message); }
+

@@ -55,11 +55,12 @@
             }
         },
         mounted() {
-            window.Echo.private('chat')
+            Echo.private('chat')
             .listen('NewMessageEvent', function (e) {
                 this.allMessages.push(e.content),
                 console.log('send')
             })
+            console.log('test')
         },
         methods: {
             sendMessage() {
@@ -67,7 +68,7 @@
                     return alert('Entrez un message');
                 }
 
-                axios.post('/api/message/chat/'+Number(this.destination), {content: this.content})
+                axios.post('/api/message/chat/'+this.destination, {content: this.content})
                     .then(response => {
                         console.log('response2 : ' + response.data);
                         this.content = '';
@@ -84,7 +85,7 @@
                 window.scrollTo(0, 99999);
             },
             fetchMessages() {
-                axios.get('/api/message/view_message/'+Number(this.destination), this.content)
+                axios.get('/api/message/view_message/'+this.destination, this.content)
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user = response.data.user.name

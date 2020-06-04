@@ -1963,9 +1963,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    window.Echo["private"]('chat').listen('NewMessageEvent', function (e) {
+    Echo["private"]('chat').listen('NewMessageEvent', function (e) {
       this.allMessages.push(e.content), console.log('send');
     });
+    console.log('test');
   },
   methods: {
     sendMessage: function sendMessage() {
@@ -1975,7 +1976,7 @@ __webpack_require__.r(__webpack_exports__);
         return alert('Entrez un message');
       }
 
-      axios.post('/api/message/chat/' + Number(this.destination), {
+      axios.post('/api/message/chat/' + this.destination, {
         content: this.content
       }).then(function (response) {
         console.log('response2 : ' + response.data);
@@ -1997,7 +1998,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this2 = this;
 
-      axios.get('/api/message/view_message/' + Number(this.destination), this.content).then(function (response) {
+      axios.get('/api/message/view_message/' + this.destination, this.content).then(function (response) {
         _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
       });
@@ -98677,7 +98678,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('messages', __webpack_requi
 
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app'
-}); // Pusher.log = function (message) { window.console.log(message); }
+});
 
 /***/ }),
 
@@ -98759,12 +98760,26 @@ channel.bind('message-1 sended', function (data) {
 });*/
 
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  // authEndpoint: '../check_message/5',
   broadcaster: 'pusher',
   key: '5f9a91e9b32d04b2f253',
   cluster: 'eu',
   encrypted: true,
   forceTLS: true
 });
+/*var pusher = new Pusher('5f9a91e9b32d04b2f253', {
+    cluster: 'eu',
+    encrypted: true
+});
+var channel = pusher.subscribe('chat');
+channel.bind('NewMessageEvent', function(data) {
+    alert(data);
+    console.log(data);
+});*/
+
+pusher_js__WEBPACK_IMPORTED_MODULE_1___default.a.log = function (message) {
+  window.console.log('message : ' + message);
+};
 
 /***/ }),
 

@@ -44,7 +44,7 @@ class User extends Authenticatable
 
         // Verifier si l'id_user est en statut online
         $user  = User::where(['isonline' => 1, 'id' => $id_user])->get();
-        if ($user->count() > 0) {
+        if (!empty($user)) {
 
             // Lister les autres users connectés à part l'user en question
             if (!empty($is_admin)) {
@@ -62,9 +62,11 @@ class User extends Authenticatable
     }
 
     public static function get_status_user($user) {
+
         $status = User::where(['isonline' => 1, 'id' => $user])->first();
         if (!empty($status->id)) {
             return $status->id;
         }
+
     }
 }
