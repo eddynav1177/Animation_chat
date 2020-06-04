@@ -103,11 +103,7 @@ class MessagesController extends Controller
                         }
                     }
                 }
-            }/* else {
-                return response([
-                    'messages' => false
-                ]);
-            }*/
+            }
         }
 
     }

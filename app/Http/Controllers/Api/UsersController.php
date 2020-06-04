@@ -29,4 +29,16 @@ class UsersController extends Controller
             return User::get_users_connected($id_animator, 1);
         }
     }
+
+    public function showUserProfile($id_user) {
+
+        if (Auth::check()) {
+            $user           = User::where(['id' => $id_user])->first(['name', 'isonline']);
+            // $user_status    = ($user->isonline == 1) ? 'Connected' : 'Disconnected';
+            return response([
+                'user' => $user
+            ]);
+        }
+
+    }
 }

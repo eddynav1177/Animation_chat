@@ -27,7 +27,6 @@
                         single-line
                         v-model="content"
                         @keyup.enter="sendMessage"
-
                     >
 
                     </v-text-field>
@@ -52,7 +51,6 @@
                 created_at: '',
                 sender: '',
                 destination : _.last( window.location.pathname.split('/')),
-
             }
         },
         mounted() {
@@ -73,12 +71,8 @@
                     .then(response => {
                         console.log('response2 : ' + response.data);
                         this.content = '';
-                        // this.allMessages.push(response.data.message)
-                        // console.log('allMessages : ' + this.allMessages);
-                        // this.created_at = response.data.message.created_at;
                         this.fetchMessages();
                         setTimeout(this.scrollToEnd, 100)
-                        console.log('type : ' + gettype(destination))
                     })
                     .catch((err) => console.log('err : ' + err.response));
             },
@@ -89,7 +83,7 @@
                 axios.get('/api/message/view_message/'+this.destination, this.content)
                 .then(response => {
                     this.allMessages    = response.data.messages;
-                    this.user = response.data.user.name
+                    this.user           = response.data.user.name;
                 });
             }
         },
@@ -97,7 +91,7 @@
         created() {
             this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
-            var destination = _.last( window.location.pathname.split( '/' ) );
+            var destination = _.last(window.location.pathname.split('/'));
         }
 
     }

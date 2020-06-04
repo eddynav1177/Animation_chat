@@ -11,23 +11,13 @@ class AnimatorController extends Controller
     AnimatorController: Controleur pour la gestion des animatrices
     */
     //
-    public function listAnimatorsConnected() {
-
-    }
-
-    public function showProfileAnimator() {
-
-    }
-
-    public function changeAnimatorIfNotPresent() {
-
+    public function __construct()
+    {
+        $this->middleware('auth');
     }
 
     public function chooseFackUser() {
 
     }
 
-    public function RegisterFackUserChosen() {
-
-    }
 }
