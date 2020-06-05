@@ -29,7 +29,7 @@ class MessagesController extends Controller
 
             if (!empty($user_status)) {
                 //Verification de la date d'envoi du dernier message
-                $last_message = MessagesModel::where(['sender' => $id_user])->orWhere(['destination' => $id_user])->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')->orderBy('created_at', 'desc')->first();
+                $last_message = MessagesModel::where(['sender_id' => $id_user])->orWhere(['recipient_id' => $id_user])->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')->orderBy('created_at', 'desc')->first();
 
                 $last_message = (!empty($last_message)) ? $last_message->id : '';
                 return $last_message;
@@ -51,7 +51,7 @@ class MessagesController extends Controller
                 if (count($list_users) > 0) {
                     if (in_array($destination, $list_users)) {
                         $validate_contenu = $request->validate([
-                            'content' => 'required'
+                            'body' => 'required'
                         ]);
 
                         if ($validate_contenu) {
@@ -66,25 +66,27 @@ class MessagesController extends Controller
                             }
 
                             // Vérification si la conversation existe déjà ou non
-                            $conversation           = ConversationsModel::where(['id_user' => $id_user, 'destination' => $destination])->orWhere(['id_user' => $destination, 'destination' => $id_user])->first();
+                            // $conversation           = ConversationsModel::where(['id_user' => $id_user, 'recipient_id' => $destination])->orWhere(['id_user' => $destination, 'recipient_id' => $id_user])->first();
 
-                            if (!empty($conversation)) {
+                            /*if (!empty($conversation)) {
                                 $id_conversation        = $conversation->id;
                             } else {
                                 // Création de la conversation
                                 $create_conversation    = ConversationsModel::create([
                                     'id_user'       => $id_user,
-                                    'destination'   => $destination,
+                                    'recipient_id'   => $destination,
                                 ]);
                                 $id_conversation        = $create_conversation->id;
-                            }
+                            }*/
 
                             $message                = MessagesModel::create([
-                                'title'             => $request->title,
-                                'content'           => $request->content,
-                                'sender'            => $id_user,
-                                'id_conversation'   => $id_conversation,
-                                'destination'       => $destination,
+                                'body'              => $request->body,
+                                'sender_id'         => $id_user,
+                                'recipient_id'      => $destination,
+                                'spamscore'         => 0,
+                                'status'            => 0,
+                                'read'              => 1,
+                                'moderated_at'      => $request->moderated_at,
                                 // 'read_at'       => Carbon::now()->toDateTimeString(),
                             ]);
 
@@ -116,7 +118,7 @@ class MessagesController extends Controller
 
             if ($id_user != $destination) {
                 $status_message = $this->verificationMessagesStatusByUsers($destination);
-                $messages       = MessagesModel::where(['sender' => $id_user, 'destination' => $destination])->orWhere(['sender' => $destination, 'destination' => $id_user])->pluck('content', 'created_at');
+                $messages       = MessagesModel::where(['sender_id' => $id_user, 'recipient_id' => $destination])->orWhere(['sender_id' => $destination, 'recipient_id' => $id_user])->pluck('body', 'created_at');
                 $messages       = ($messages) ? $messages : 'Aucun message';
                 return response([
                     'messages'          => $messages,

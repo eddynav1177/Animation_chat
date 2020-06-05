@@ -10,7 +10,7 @@ class ConversationsModel extends Model
     protected $table    = 'conversations';
 
     protected $fillable = [
-        'id_user', 'destination'
+        'id_user', 'id_destination'
     ];
 
     /*public function user() {

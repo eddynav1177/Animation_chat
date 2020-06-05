@@ -10,7 +10,7 @@ class MessagesModel extends Model
     protected $table='messages';
 
     protected $fillable = [
-        'title', 'content', 'sender', 'destination', 'read_at', 'id_conversation'
+        'sender_id', 'recipient_id', 'body', 'spamscore', 'status', 'read', 'sent_from', 'moderated_at'
     ];
 
 }

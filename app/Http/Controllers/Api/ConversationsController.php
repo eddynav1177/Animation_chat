@@ -18,7 +18,7 @@ class ConversationsController extends Controller
 
         if (Auth::check()) {
             $id_user = auth()->user()->id;
-            $conversations = ConversationsModel::where(['id_user' => $id_user])->orWhere(['destination' => $id_user])->pluck('destination');
+            $conversations = ConversationsModel::where(['id_user' => $id_user])->orWhere(['id_destination' => $id_user])->pluck('id_destination');
             $conversations = ($conversations) ? $conversations : 'Aucune conversation';
 
             return response([
