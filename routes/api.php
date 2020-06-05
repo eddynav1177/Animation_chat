@@ -37,7 +37,7 @@ Route::post('/register/animator', 'Api\AuthController@animatorRegister');
 Route::post('/login/user', 'Api\AuthController@userLogin');
 Route::post('/login/animator', 'Api\AuthController@animatorLogin');
 
-Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
+Route::post('/message/chat/{id}/{fk_user}', 'Api\MessagesController@sendMessage')->where(['id' => '[0-9]+', 'fk_user' => '[0-9]+']);
 
 Route::post('/fc_user/create/{id}', 'Api\FackUsersController@createFackUser');
 Route::post('/fc_user/choose/{id}', 'Api\FackUsersController@chooseFackUserByAdmin');
@@ -63,7 +63,7 @@ Route::get('/fc_user/disconnected', 'Api\FackUsersController@getFackUsersAllNotA
 Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
 
 // Test event
-Route::get('/message/check_message/{id}', function () {
+Route::get('/message/check_message/{id}/{fk_user}', function () {
     return view('home');
 })->middleware('auth');
 /*

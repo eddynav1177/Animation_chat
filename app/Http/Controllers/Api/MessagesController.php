@@ -38,15 +38,18 @@ class MessagesController extends Controller
 
     }
 
-    public function sendMessage(Request $request, $destination) {
+    public function sendMessage(Request $request, $destination, $fk_user) {
 
         if (Auth::check()) {
-            $id_user    = auth()->user()->id;
+            $user           = auth()->user();
+            $id_user        = $user->id;
 
-            // Envoi d'un message uniquement si l'id_user est différent de la destination
+            // Envoi d'un message uniquement si l'id_user est différent de la fake_user
             if ($id_user != $destination) {
-                // Liste de tous les utilisateurs connectés pour l'envoi des messages
-                $list_users     = User::get_users_connected($id_user);
+                $is_admin_destination   = User::get_admin_user($destination);
+                $fk_user                = ($is_admin_destination && $user->is_admin == 1) ? 0 : $fk_user;
+                // Liste de tous les utilisateurs connectés pour l'envoi d'un message
+                $list_users             = User::get_users_connected($id_user);
 
                 if (count($list_users) > 0) {
                     if (in_array($destination, $list_users)) {
@@ -66,19 +69,17 @@ class MessagesController extends Controller
                             }
 
                             // Vérification si la conversation existe déjà ou non
-                            // $conversation           = ConversationsModel::where(['id_user' => $id_user, 'recipient_id' => $destination])->orWhere(['id_user' => $destination, 'recipient_id' => $id_user])->first();
-
-                            /*if (!empty($conversation)) {
+                            $conversation           = ConversationsModel::where(['id_user' => $id_user, 'id_destination' => $destination])->orWhere(['id_user' => $destination, 'id_destination' => $id_user])->first();
+                            if (!empty($conversation)) {
                                 $id_conversation        = $conversation->id;
                             } else {
                                 // Création de la conversation
                                 $create_conversation    = ConversationsModel::create([
-                                    'id_user'       => $id_user,
-                                    'recipient_id'   => $destination,
+                                    'id_user'           => $id_user,
+                                    'id_destination'    => $destination,
                                 ]);
                                 $id_conversation        = $create_conversation->id;
-                            }*/
-
+                            }
                             $message                = MessagesModel::create([
                                 'body'              => $request->body,
                                 'sender_id'         => $id_user,
@@ -86,8 +87,9 @@ class MessagesController extends Controller
                                 'spamscore'         => 0,
                                 'status'            => 0,
                                 'read'              => 1,
+                                'conversation_id'   => $id_conversation,
                                 'moderated_at'      => $request->moderated_at,
-                                // 'read_at'       => Carbon::now()->toDateTimeString(),
+                                'fack_user_id'      => $fk_user
                             ]);
 
                             // Vérification de la derniere date d'envoi d'un message
@@ -107,6 +109,7 @@ class MessagesController extends Controller
                     }
                 }
             }
+
         }
 
     }

@@ -25,7 +25,7 @@
                         row=2
                         label='Entrez un message'
                         single-line
-                        v-model="content"
+                        v-model="body"
                         @keyup.enter="sendMessage"
                     >
 
@@ -44,33 +44,34 @@
         props: ['auth_user'],
         data () {
             return {
-                content: null,
+                body: null,
                 csrfToken: null,
                 allMessages: [],
                 message: [],
                 created_at: '',
                 sender: '',
-                destination : _.last( window.location.pathname.split('/')),
+                destination: window.location.pathname.split('/').slice(-2, -1)[0],
+                fack_user: window.location.pathname.split('/').pop(),
             }
         },
         mounted() {
             Echo.private('chat')
             .listen('NewMessageEvent', function (e) {
-                this.allMessages.push(e.content),
+                this.allMessages.push(e.body),
                 console.log('send')
             })
             console.log('test')
         },
         methods: {
             sendMessage() {
-                if (!this.content) {
+                if (!this.body) {
                     return alert('Entrez un message');
                 }
 
-                axios.post('/api/message/chat/'+this.destination, {content: this.content})
+                axios.post('/api/message/chat/'+this.destination+'/'+this.fack_user, {body: this.body})
                     .then(response => {
                         console.log('response2 : ' + response.data);
-                        this.content = '';
+                        this.body = '';
                         this.fetchMessages();
                         setTimeout(this.scrollToEnd, 100)
                     })
@@ -80,7 +81,7 @@
                 window.scrollTo(0, 99999);
             },
             fetchMessages() {
-                axios.get('/api/message/view_message/'+this.destination, this.content)
+                axios.get('/api/message/view_message/'+this.destination, this.body)
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user           = response.data.user.name;
@@ -91,7 +92,7 @@
         created() {
             this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
-            var destination = _.last(window.location.pathname.split('/'));
+            console.log('destination : ' + this.destination+ ', fack_user : ' + this.fack_user)
         }
 
     }

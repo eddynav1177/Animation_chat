@@ -23,7 +23,7 @@ class FackUsersController extends Controller
     private function getFackUsersStatus($is_online) {
 
         if (Auth::check()) {
-            $fack_users_affected = DB::table('fack_users')->leftJoin('users', 'fack_users.id_user', 'users.id')->where(['users.isonline' => $is_online, 'users.is_admin' => 1])->pluck('fack_users.id');
+            $fack_users_affected = DB::table('fack_users')->join('users', 'fack_users.id_user', 'users.id')->where(['users.isonline' => $is_online, 'users.is_admin' => 1])->pluck('fack_users.id');
             return $fack_users_affected;
         }
 
@@ -110,4 +110,5 @@ class FackUsersController extends Controller
             }
         }
     }
+
 }

@@ -73,4 +73,5 @@ class User extends Authenticatable
         $is_admin = User::where(['is_admin' => 1, 'id' => $user])->first(['id']);
         return $is_admin;
     }
+
 }

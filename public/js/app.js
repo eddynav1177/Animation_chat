@@ -1949,23 +1949,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auth_user'],
   data: function data() {
     return {
-      content: null,
+      body: null,
       csrfToken: null,
       allMessages: [],
       message: [],
       created_at: '',
       sender: '',
-      destination: _.last(window.location.pathname.split('/'))
+      destination: window.location.pathname.split('/').slice(-2, -1)[0],
+      fack_user: window.location.pathname.split('/').pop()
     };
   },
   mounted: function mounted() {
     Echo["private"]('chat').listen('NewMessageEvent', function (e) {
-      this.allMessages.push(e.content), console.log('send');
+      this.allMessages.push(e.body), console.log('send');
     });
     console.log('test');
   },
@@ -1973,22 +1973,19 @@ __webpack_require__.r(__webpack_exports__);
     sendMessage: function sendMessage() {
       var _this = this;
 
-      if (!this.content) {
+      if (!this.body) {
         return alert('Entrez un message');
       }
 
-      axios.post('/api/message/chat/' + this.destination, {
-        content: this.content
+      axios.post('/api/message/chat/' + this.destination + '/' + this.fack_user, {
+        body: this.body
       }).then(function (response) {
         console.log('response2 : ' + response.data);
-        _this.content = ''; // this.allMessages.push(response.data.message)
-        // console.log('allMessages : ' + this.allMessages);
-        // this.created_at = response.data.message.created_at;
+        _this.body = '';
 
         _this.fetchMessages();
 
         setTimeout(_this.scrollToEnd, 100);
-        console.log('type : ' + gettype(destination));
       })["catch"](function (err) {
         return console.log('err : ' + err.response);
       });
@@ -1999,7 +1996,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this2 = this;
 
-      axios.get('/api/message/view_message/' + this.destination, this.content).then(function (response) {
+      axios.get('/api/message/view_message/' + this.destination, this.body).then(function (response) {
         _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
       });
@@ -2008,8 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     this.fetchMessages();
-
-    var destination = _.last(window.location.pathname.split('/'));
+    console.log('destination : ' + this.destination + ', fack_user : ' + this.fack_user);
   }
 });
 
@@ -44389,11 +44385,11 @@ var render = function() {
                       }
                     },
                     model: {
-                      value: _vm.content,
+                      value: _vm.body,
                       callback: function($$v) {
-                        _vm.content = $$v
+                        _vm.body = $$v
                       },
-                      expression: "content"
+                      expression: "body"
                     }
                   })
                 ],
