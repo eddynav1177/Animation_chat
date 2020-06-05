@@ -43,7 +43,7 @@ class User extends Authenticatable
     public static function get_users_connected($id_user, $is_admin = '') {
 
         // Verifier si l'id_user est en statut online
-        $user  = User::where(['isonline' => 1, 'id' => $id_user])->get();
+        $user  = User::where(['isonline' => 1, 'id' => $id_user])->first();
         if (!empty($user)) {
 
             // Lister les autres users connectés à part l'user en question
@@ -64,9 +64,13 @@ class User extends Authenticatable
     public static function get_status_user($user) {
 
         $status = User::where(['isonline' => 1, 'id' => $user])->first();
-        if (!empty($status->id)) {
-            return $status->id;
-        }
+        $status = (!empty($status->id)) ? $status->id : null;
+        return $status;
 
+    }
+
+    public static function get_admin_user($user) {
+        $is_admin = User::where(['is_admin' => 1, 'id' => $user])->first(['id']);
+        return $is_admin;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Auth;
+// use Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -19,6 +19,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat', function ($user) {
-    // return true;
-    return Auth::check();
+    return true;
+    // return Auth::check();
 });

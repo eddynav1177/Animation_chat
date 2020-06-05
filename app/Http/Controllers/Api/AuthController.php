@@ -75,11 +75,11 @@ class AuthController extends Controller
 
     }
 
-    public function loginUser(Request $request) {
+    public function userLogin(Request $request) {
         return $this->login_all($request);
     }
 
-    public function loginAnimatrice(Request $request) {
+    public function animatorLogin(Request $request) {
         return $this->login_all($request, 1);
     }
 
@@ -94,7 +94,7 @@ class AuthController extends Controller
         return $this->register_all($request, 0);
     }
 
-    public function animatriceRegister(Request $request) {
+    public function animatorRegister(Request $request) {
         return $this->register_all($request, 1);
     }
 }

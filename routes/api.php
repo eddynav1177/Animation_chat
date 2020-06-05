@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\MessagesEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 AuthController: Controleur pour l'authentification en utilisant passport
 UsersController : Gestion des clients et des animatrices après auth
 FackUsersController : Controleur pour la gestion des faux utilisateurs incarnés par les animatrices
-AnimatorController: Controleur pour la gestion des animatrices
+AnimatorController : Controleur pour la gestion des animatrices
 Register Controller : Gestion de l'inscription des clients et des animatrices
-ConversationsController: Controleur pour la gestion des conversations entre les clients et les animatrices
+ConversationsController : Controleur pour la gestion des conversations entre les clients et les animatrices
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -32,13 +31,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 ------------Post------------
 */
 // Route::post('/register', 'Api\AuthController@register');
-Route::post('/register/user_register', 'Api\AuthController@userRegister');
-Route::post('/register/animatrice_register', 'Api\AuthController@animatriceRegister');
+Route::post('/register/user', 'Api\AuthController@userRegister');
+Route::post('/register/animator', 'Api\AuthController@animatorRegister');
 
-Route::post('/login/user_login', 'Api\AuthController@loginUser');
-Route::post('/login/animatrice', 'Api\AuthController@loginAnimatrice');
+Route::post('/login/user', 'Api\AuthController@userLogin');
+Route::post('/login/animator', 'Api\AuthController@animatorLogin');
 
 Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
+
+Route::post('/fc_user/create/{id}', 'Api\FackUsersController@createFackUser');
+Route::post('/fc_user/choose/{id}', 'Api\FackUsersController@chooseFackUserByAdmin');
 /*
 ------------End Post------------
 */
@@ -46,15 +48,19 @@ Route::post('/message/chat/{id}', 'Api\MessagesController@sendMessage');
 /*
 ------------Get------------
 */
-Route::get('/logout/{id}', 'Api\AuthController@loggout');
+Route::get('/logout/{id}', 'Api\AuthController@logout');
 
-Route::get('/home/list_users_connected/{id}', 'Api\UsersController@listUsersConnected');
-Route::get('/home/list_animator_connected/{id}', 'Api\UsersController@listAnimatorsConnected');
+Route::get('/home/users/list/{id}', 'Api\UsersController@listUsersConnected');
+Route::get('/home/animators/list/{id}', 'Api\UsersController@listAnimatorsConnected');
 
-Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessage');
+Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessages');
 Route::get('/message/conversations', 'Api\ConversationsController@viewConversations');
 
 Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
+
+Route::get('/fc_user/connected', 'Api\FackUsersController@getFackUsersAllAffected');
+Route::get('/fc_user/disconnected', 'Api\FackUsersController@getFackUsersAllNotAffected');
+Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
 
 // Test event
 Route::get('/message/check_message/{id}', function () {
@@ -64,7 +70,6 @@ Route::get('/message/check_message/{id}', function () {
 ------------End Get------------
 */
 
-//Route::get('/animator/choose_fack_user/{id}', 'Api\AnimatorController@chooseFackUser');
 
 // Route::view('/home', 'home')->middleware('auth');
 /*Route::view('/user', 'user');

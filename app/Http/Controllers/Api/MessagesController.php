@@ -18,6 +18,7 @@ class MessagesController extends Controller
     */
 
     public function __construct() {
+        // $this->middleware('auth:api');
         $this->middleware('auth');
     }
 
@@ -108,7 +109,7 @@ class MessagesController extends Controller
 
     }
 
-    public function viewMessage(Request $request, $destination) {
+    public function viewMessages(Request $request, $destination) {
 
         if (Auth::check()) {
             $id_user        = auth()->user()->id;
