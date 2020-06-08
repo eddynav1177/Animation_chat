@@ -110,17 +110,4 @@ class FackUsersController extends Controller
         }
     }
 
-    /*public function viewConversationsByUser(Request $request, $destination) {
-
-        if (Auth::check()) {
-            $user       = auth()->user();
-            $id_user    = ($user->id == $destination) ? $user->id : $destination;
-            $fk_user    = FackUsersModel::where(['id_user' => $id_user])->pluck(['id_user', 'id']);
-            return response([
-                'user' => $fk_user
-            ]);
-        }
-
-    }*/
-
 }

@@ -2,58 +2,54 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use App\Models\ClientsModel;
-use App\Models\AnimateursModel;
+use App\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Auth;
 
 class RegisterController extends Controller
 {
-    //
+    private function register_all(Request $request, $is_admin) {
 
-    public function __construct() {
-        $this->middleware('guest');
-        // $this->middleware('guest:super_clients');
-        $this->middleware('guest:animateurs');
-    }
-
-    public function clientsRegister() {
-        return view('auth.register', ['url', 'super_clients']);
-    }
-
-    public function animatorRegister() {
-        return view('auth.register', ['url', 'animateurs']);
-    }
-
-    // Ajout d'un client
-    protected function createClient(Request $request) {
-        $this->validator($request->all())->validate();
-        $clients = ClientsModel::create([
-            'name'      => $request['name'],
-            'email'     => $request['email'],
-            'password'  => Hash::make($request['password'])
+        $validate_data = $request->validate([
+            'name'      => 'required|max:255',
+            'email'     => 'email|required|unique:users',
+            'password'  => 'required|confirmed',
         ]);
 
-        return redirect()->intended('login/super_clients');
+        $validate_data['password'] = bcrypt($request->password);
+        if ($validate_data) {
+            $user           = User::create([
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'password'  => $validate_data['password'],
+                'isonline'  => 1,
+                'is_admin'  => $is_admin,
+            ]);
+            if ($user) {
+                $access_token   = $user->createToken('authToken')->accessToken;
+
+                return response([
+                    'user'          => $user,
+                    'access_token'  => $access_token
+                ]);
+            }
+        } else {
+            return response([
+                'message' => 'invalid creation'
+            ]);
+        }
+
     }
 
-    // Ajout d'un animateur
-    protected function createAnimateur(Request $request) {
+    public function userRegister(Request $request) {
+        return $this->register_all($request, 0);
+    }
 
-        dd($request);
-        die();
-        $this->validator($request->all())->validate();
-        $clients = AnimateursModel::create([
-            'name'      => $request['name'],
-            'email'     => $request['email'],
-            'password'  => Hash::make($request['password'])
-        ]);
-
-        return redirect()->intended('login/animateurs');
+    public function animatorRegister(Request $request) {
+        return $this->register_all($request, 1);
     }
 }

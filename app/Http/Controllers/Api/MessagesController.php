@@ -10,6 +10,7 @@ use Auth;
 use App\Events\NewMessageEvent;
 use App\Models\ConversationsModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class MessagesController extends Controller
 {
@@ -97,12 +98,11 @@ class MessagesController extends Controller
 
                             if ($message) {
                                 // Envoi des events vers pusher
-                                broadcast(new NewMessageEvent($message))->toOthers();
-
+                                // broadcast(new NewMessageEvent($message))->toOthers();
                                 return response([
                                     'message'           => $message,
                                     'id_status_message' => $status_message,
-                                    'user'              => auth()->user()
+                                    'user'              => auth()->user(),
                                 ]);
                             }
                         }

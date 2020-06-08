@@ -33,8 +33,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 */
 // Route::post('/register', 'Api\AuthController@register');
 // Route::group(['middleware' => 'auth:api'], function() {});
-Route::post('/register/user', 'Api\AuthController@userRegister');
-Route::post('/register/animator', 'Api\AuthController@animatorRegister');
+Route::post('/register/user', 'Api\RegisterController@userRegister');
+Route::post('/register/animator', 'Api\RegisterController@animatorRegister');
 
 Route::post('/login/user', 'Api\AuthController@userLogin');
 Route::post('/login/animator', 'Api\AuthController@animatorLogin');
@@ -63,7 +63,6 @@ Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
 Route::get('/fc_user/list/connected', 'Api\FackUsersController@getFackUsersAllAffected');
 Route::get('/fc_user/list/disconnected', 'Api\FackUsersController@getFackUsersAllNotAffected');
 Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
-// Route::get('/fc_user/conversations/{id}', 'Api\FackUsersController@viewConversationsByUser');
 
 // Test event
 Route::get('/message/check_message/{id}/{fk_user}', function () {

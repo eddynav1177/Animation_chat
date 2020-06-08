@@ -13,39 +13,6 @@ class AuthController extends Controller
     AuthController: Controleur pour l'authentification en utilisant passport
     */
 
-    private function register_all(Request $request, $is_admin) {
-
-        $validate_data = $request->validate([
-            'name'      => 'required|max:255',
-            'email'     => 'email|required|unique:users',
-            'password'  => 'required|confirmed',
-        ]);
-
-        $validate_data['password'] = bcrypt($request->password);
-        if ($validate_data) {
-            $user           = User::create([
-                'name'      => $request->name,
-                'email'     => $request->email,
-                'password'  => $validate_data['password'],
-                'isonline'  => 1,
-                'is_admin'  => $is_admin,
-            ]);
-            if ($user) {
-                $access_token   = $user->createToken('authToken')->accessToken;
-
-                return response([
-                    'user'          => $user,
-                    'access_token'  => $access_token
-                ]);
-            }
-        } else {
-            return response([
-                'message' => 'invalid creation'
-            ]);
-        }
-
-    }
-
     private function login_all(Request $request, $is_admin='') {
 
         $login_data = $request->validate([
@@ -90,11 +57,4 @@ class AuthController extends Controller
         }
     }
 
-    public function userRegister(Request $request) {
-        return $this->register_all($request, 0);
-    }
-
-    public function animatorRegister(Request $request) {
-        return $this->register_all($request, 1);
-    }
 }
