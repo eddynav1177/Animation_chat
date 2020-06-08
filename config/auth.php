@@ -44,11 +44,6 @@ return [
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
-            'hash' => false,
-        ],
-        'animateurs' => [
-            'driver' => 'passport',
-            'provider' => 'animateurs',
         ],
     ],
 
@@ -73,10 +68,6 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
-        ],
-        'animateurs' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\AnimateursModel::class,
         ],
 
         // 'users' => [

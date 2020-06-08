@@ -50,7 +50,7 @@ Route::post('/fc_user/choose/{id}', 'Api\FackUsersController@chooseFackUserByAdm
 /*
 ------------Get------------
 */
-Route::get('/logout/{id}', 'Api\AuthController@logout');
+Route::get('/logout', 'Api\AuthController@logout');
 
 Route::get('/home/users/list/{id}', 'Api\UsersController@listUsersConnected');
 Route::get('/home/animators/list/{id}', 'Api\UsersController@listAnimatorsConnected');

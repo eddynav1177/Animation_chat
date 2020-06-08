@@ -11,7 +11,6 @@ class AnimateursModel extends Authenticatable
     //
     use Notifiable;
 
-    protected $guard    = "animateurs";
     protected $table    = "animateurs";
     protected $fillable = ["name", "email", "password"];
     protected $hidden   = ["password", "remember_token"];

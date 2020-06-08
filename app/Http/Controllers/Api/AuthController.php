@@ -6,12 +6,46 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use HasApiTokens;
 
 class AuthController extends Controller
 {
     /*
     AuthController: Controleur pour l'authentification en utilisant passport
     */
+
+    private function register_all(Request $request, $is_admin) {
+
+        $validate_data = $request->validate([
+            'name'      => 'required|max:255',
+            'email'     => 'email|required|unique:users',
+            'password'  => 'required|confirmed',
+        ]);
+
+        $validate_data['password'] = bcrypt($request->password);
+        if ($validate_data) {
+            $user           = User::create([
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'password'  => $validate_data['password'],
+                'isonline'  => 1,
+                'is_admin'  => $is_admin,
+            ]);
+            if ($user) {
+                $access_token   = $user->createToken('authToken')->accessToken;
+
+                return response([
+                    'user'          => $user,
+                    'access_token'  => $access_token
+                ]);
+            }
+        } else {
+            return response([
+                'message' => 'invalid creation'
+            ]);
+        }
+
+    }
 
     private function login_all(Request $request, $is_admin='') {
 
@@ -50,11 +84,22 @@ class AuthController extends Controller
         return $this->login_all($request, 1);
     }
 
-    public function logout(Request $request, $id) {
-        Auth::logout();
-        if (!empty($id)) {
+    public function logout(Request $request) {
+
+        if (Auth::check()) {
             auth()->user()->update(['isonline' => 0]);
+            Auth::logout();
+            /*$user = Auth::user()->token();
+            return response(['user' => $user]);*/
         }
+
     }
 
+    public function userRegister(Request $request) {
+        return $this->register_all($request, 0);
+    }
+
+    public function animatorRegister(Request $request) {
+        return $this->register_all($request, 1);
+    }
 }
