@@ -8,7 +8,7 @@ use Auth;
 class FackUsersModel extends Model
 {
     //
-    protected $table='fack_users';
+    protected $table='fake_users';
 
     protected $fillable = [
         'id_user', 'username', 'age', 'picture', 'description'

@@ -13,7 +13,7 @@ class CreateFackUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('fack_users', function (Blueprint $table) {
+        Schema::create('fake_users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_user')->unsigned();
             $table->string('username');
@@ -33,6 +33,6 @@ class CreateFackUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fack_users');
+        Schema::dropIfExists('fake_users');
     }
 }

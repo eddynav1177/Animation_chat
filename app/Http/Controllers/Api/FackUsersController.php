@@ -16,14 +16,14 @@ class FackUsersController extends Controller
     */
     //
 
-    public function __construct() {
+    /*public function __construct() {
         $this->middleware('auth');
-    }
+    }*/
 
     private function getFackUsersStatus($is_online) {
 
         if (Auth::check()) {
-            $fack_users_affected = DB::table('fack_users')->join('users', 'fack_users.id_user', 'users.id')->where(['users.isonline' => $is_online, 'users.is_admin' => 1])->pluck('fack_users.id');
+            $fack_users_affected = DB::table('fake_users')->join('users', 'fake_users.id_user', 'users.id')->where(['users.isonline' => $is_online, 'users.is_admin' => 1])->pluck('fake_users.id');
             return $fack_users_affected;
         }
 
@@ -66,7 +66,6 @@ class FackUsersController extends Controller
             $is_admin           = User::get_admin_user($id_user);
             if ($is_admin) {
                 if ($validate_username) {
-
                     $fack_user  = FackUsersModel::create([
                         'id_user'           => $id_user,
                         'username'          => $validate_username['username'],
@@ -110,5 +109,18 @@ class FackUsersController extends Controller
             }
         }
     }
+
+    /*public function viewConversationsByUser(Request $request, $destination) {
+
+        if (Auth::check()) {
+            $user       = auth()->user();
+            $id_user    = ($user->id == $destination) ? $user->id : $destination;
+            $fk_user    = FackUsersModel::where(['id_user' => $id_user])->pluck(['id_user', 'id']);
+            return response([
+                'user' => $fk_user
+            ]);
+        }
+
+    }*/
 
 }

@@ -26,11 +26,13 @@ ConversationsController : Controleur pour la gestion des conversations entre les
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::middleware('auth:api')->post ('/broadcast/auth' , 'Api\BroadcastAuthController@auth');
 
 /*
 ------------Post------------
 */
 // Route::post('/register', 'Api\AuthController@register');
+// Route::group(['middleware' => 'auth:api'], function() {});
 Route::post('/register/user', 'Api\AuthController@userRegister');
 Route::post('/register/animator', 'Api\AuthController@animatorRegister');
 
@@ -54,13 +56,14 @@ Route::get('/home/users/list/{id}', 'Api\UsersController@listUsersConnected');
 Route::get('/home/animators/list/{id}', 'Api\UsersController@listAnimatorsConnected');
 
 Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessages');
-Route::get('/message/conversations', 'Api\ConversationsController@viewConversations');
+Route::get('/message/conversations', 'Api\ConversationsController@viewAllConversations');
 
 Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
 
-Route::get('/fc_user/connected', 'Api\FackUsersController@getFackUsersAllAffected');
-Route::get('/fc_user/disconnected', 'Api\FackUsersController@getFackUsersAllNotAffected');
+Route::get('/fc_user/list/connected', 'Api\FackUsersController@getFackUsersAllAffected');
+Route::get('/fc_user/list/disconnected', 'Api\FackUsersController@getFackUsersAllNotAffected');
 Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
+// Route::get('/fc_user/conversations/{id}', 'Api\FackUsersController@viewConversationsByUser');
 
 // Test event
 Route::get('/message/check_message/{id}/{fk_user}', function () {
@@ -71,7 +74,7 @@ Route::get('/message/check_message/{id}/{fk_user}', function () {
 */
 
 
-// Route::view('/home', 'home')->middleware('auth');
+Route::view('/home', 'home')->middleware('auth:api');
 /*Route::view('/user', 'user');
 Route::view('/animateurs', 'animateurs');*/
 

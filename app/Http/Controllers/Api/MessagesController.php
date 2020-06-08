@@ -43,11 +43,11 @@ class MessagesController extends Controller
         if (Auth::check()) {
             $user           = auth()->user();
             $id_user        = $user->id;
-
             // Envoi d'un message uniquement si l'id_user est différent de la fake_user
             if ($id_user != $destination) {
                 $is_admin_destination   = User::get_admin_user($destination);
-                $fk_user                = ($is_admin_destination && $user->is_admin == 1) ? 0 : $fk_user;
+
+                $fk_user                = (($is_admin_destination && $user->is_admin == 1) || (!$is_admin_destination && (empty($user->is_admin)))) ? 0 : $fk_user;
                 // Liste de tous les utilisateurs connectés pour l'envoi d'un message
                 $list_users             = User::get_users_connected($id_user);
 
@@ -109,6 +109,9 @@ class MessagesController extends Controller
                     }
                 }
             }
+            return response([
+                'messages' => false
+            ]);
 
         }
 
@@ -117,16 +120,16 @@ class MessagesController extends Controller
     public function viewMessages(Request $request, $destination) {
 
         if (Auth::check()) {
-            $id_user        = auth()->user()->id;
+            $user        = auth()->user()->id;
 
-            if ($id_user != $destination) {
+            if ($user->id != $destination) {
                 $status_message = $this->verificationMessagesStatusByUsers($destination);
-                $messages       = MessagesModel::where(['sender_id' => $id_user, 'recipient_id' => $destination])->orWhere(['sender_id' => $destination, 'recipient_id' => $id_user])->pluck('body', 'created_at');
+                $messages       = MessagesModel::where(['sender_id' => $user->id, 'recipient_id' => $destination])->orWhere(['sender_id' => $destination, 'recipient_id' => $user->id])->pluck('body', 'created_at');
                 $messages       = ($messages) ? $messages : 'Aucun message';
                 return response([
                     'messages'          => $messages,
                     'id_status_message' => $status_message,
-                    'user'              => auth()->user(),
+                    'user'              => $user,
                 ]);
             }
         }
