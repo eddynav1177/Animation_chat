@@ -98,7 +98,7 @@ class MessagesController extends Controller
 
                             if ($message) {
                                 // Envoi des events vers pusher
-                                // broadcast(new NewMessageEvent($message))->toOthers();
+                                broadcast(new NewMessageEvent($message))->toOthers();
                                 return response([
                                     'message'           => $message,
                                     'id_status_message' => $status_message,
