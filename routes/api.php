@@ -36,10 +36,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/register/user', 'Api\RegisterController@userRegister');
 Route::post('/register/animator', 'Api\RegisterController@animatorRegister');
 
-Route::post('/login/user', 'Api\AuthController@userLogin');
-Route::post('/login/animator', 'Api\AuthController@animatorLogin');
+Route::post('/login/user', 'Api\AuthController@loginAll');
 
-Route::post('/message/chat/{id}/{fk_user}', 'Api\MessagesController@sendMessage')->where(['id' => '[0-9]+', 'fk_user' => '[0-9]+']);
+Route::post('/message/tchat/{id}/{fk_user}', 'Api\MessagesController@sendMessage')->where(['id' => '[0-9]+', 'fk_user' => '[0-9]+']);
 
 Route::post('/fc_user/create/{id}', 'Api\FackUsersController@createFackUser');
 Route::post('/fc_user/choose/{id}', 'Api\FackUsersController@chooseFackUserByAdmin');
@@ -55,7 +54,7 @@ Route::get('/logout', 'Api\AuthController@logout');
 Route::get('/home/users/list/{id}', 'Api\UsersController@listUsersConnected');
 Route::get('/home/animators/list/{id}', 'Api\UsersController@listAnimatorsConnected');
 
-Route::get('/message/view_message/{id}', 'Api\MessagesController@viewMessages');
+Route::get('/message/view_messages/{id}/{fk_user}', 'Api\MessagesController@viewMessages');
 Route::get('/message/conversations', 'Api\ConversationsController@viewAllConversations');
 
 Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');

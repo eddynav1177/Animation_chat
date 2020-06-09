@@ -15,9 +15,4 @@ class AnimatorController extends Controller
     {
         $this->middleware('auth');
     }
-
-    public function chooseFackUser() {
-
-    }
-
 }

@@ -9,7 +9,6 @@ use Auth;
 
 class UsersController extends Controller
 {
-    //
     /*
     UsersController : Controller pour tout type d'utilisateurs connectés
     */

@@ -12,7 +12,7 @@ use Auth;
 
 class RegisterController extends Controller
 {
-    private function register_all(Request $request, $is_admin) {
+    private function registerAll(Request $request, $is_admin) {
 
         $validate_data = $request->validate([
             'name'      => 'required|max:255',
@@ -46,10 +46,10 @@ class RegisterController extends Controller
     }
 
     public function userRegister(Request $request) {
-        return $this->register_all($request, 0);
+        return $this->registerAll($request, 0);
     }
 
     public function animatorRegister(Request $request) {
-        return $this->register_all($request, 1);
+        return $this->registerAll($request, 1);
     }
 }

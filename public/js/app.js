@@ -1977,10 +1977,10 @@ __webpack_require__.r(__webpack_exports__);
         return alert('Entrez un message');
       }
 
-      axios.post('/api/message/chat/' + this.destination + '/' + this.fack_user, {
+      axios.post('/api/message/tchat/' + this.destination + '/' + this.fack_user, {
         body: this.body
       }).then(function (response) {
-        console.log('response2 : ' + response.data);
+        console.log('response_data : ' + response.data);
         _this.body = '';
 
         _this.fetchMessages();
@@ -1996,7 +1996,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this2 = this;
 
-      axios.get('/api/message/view_message/' + this.destination, this.body).then(function (response) {
+      axios.get('/api/message/view_messages/' + this.destination + '/' + this.fack_user, this.body).then(function (response) {
         _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
       });
@@ -2005,7 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     this.fetchMessages();
-    console.log('destination : ' + this.destination + ', fack_user : ' + this.fack_user);
+    console.log('destinationtest : ' + this.destination + ', fack_user : ' + this.fack_user);
   }
 });
 

@@ -68,9 +68,9 @@
                     return alert('Entrez un message');
                 }
 
-                axios.post('/api/message/chat/'+this.destination+'/'+this.fack_user, {body: this.body})
+                axios.post('/api/message/tchat/'+this.destination+'/'+this.fack_user, {body: this.body})
                     .then(response => {
-                        console.log('response2 : ' + response.data);
+                        console.log('response_data : ' + response.data);
                         this.body = '';
                         this.fetchMessages();
                         setTimeout(this.scrollToEnd, 100)
@@ -81,7 +81,7 @@
                 window.scrollTo(0, 99999);
             },
             fetchMessages() {
-                axios.get('/api/message/view_message/'+this.destination, this.body)
+                axios.get('/api/message/view_messages/'+this.destination+'/'+this.fack_user, this.body)
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user           = response.data.user.name;
@@ -92,7 +92,7 @@
         created() {
             this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
-            console.log('destination : ' + this.destination+ ', fack_user : ' + this.fack_user)
+            console.log('destinationtest : ' + this.destination+ ', fack_user : ' + this.fack_user)
         }
 
     }

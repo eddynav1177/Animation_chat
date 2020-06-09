@@ -14,7 +14,6 @@ class FackUsersController extends Controller
     /*
     FackUsersController : controleur pour la gestion des faux utilisateurs incarnés par les animatrices
     */
-    //
 
     /*public function __construct() {
         $this->middleware('auth');
@@ -23,7 +22,10 @@ class FackUsersController extends Controller
     private function getFackUsersStatus($is_online) {
 
         if (Auth::check()) {
-            $fack_users_affected = DB::table('fake_users')->join('users', 'fake_users.id_user', 'users.id')->where(['users.isonline' => $is_online, 'users.is_admin' => 1])->pluck('fake_users.id');
+            $fack_users_affected = DB::table('fake_users')
+                                    ->join('users', 'fake_users.id_user', 'users.id')
+                                    ->where(['users.isonline' => $is_online, 'users.is_admin' => 1])
+                                    ->pluck('fake_users.id');
             return $fack_users_affected;
         }
 
@@ -32,7 +34,8 @@ class FackUsersController extends Controller
     public function showProfileFackUser($id_fc_user) {
 
         if (Auth::check()) {
-            $fack_user_profile = FackUsersModel::where(['id' => $id_fc_user])->first(['username', 'age', 'picture', 'description']);
+            $fack_user_profile = FackUsersModel::where(['id' => $id_fc_user])
+                                    ->first(['username', 'age', 'picture', 'description']);
             if ($fack_user_profile) {
                 return response([
                     'fack_user_profile' => $fack_user_profile
@@ -92,12 +95,14 @@ class FackUsersController extends Controller
             $is_admin   = User::get_admin_user($id_user);
             if ($is_admin) {
                 // Vérifier si le fack_user à sélectionner n'est pas utilisé par une animatrice déjà connectée
-                $fack_user = FackUsersModel::where(['id' => $id_fc_user])->first('id_user');
+                $fack_user = FackUsersModel::where(['id' => $id_fc_user])
+                                ->first('id_user');
                 if ($fack_user) {
                     $status_user = User::get_users_connected($fack_user);
                     if (empty($status_user)) {
                         // Si l'user n'est pas connecté, on pourra choisir le faux_user
-                        $current_fack_user = FackUsersModel::where(['id' => $id_fc_user])->update(['id_user' => $id_user]);
+                        $current_fack_user = FackUsersModel::where(['id' => $id_fc_user])
+                                                ->update(['id_user' => $id_user]);
                         return response([
                             'fack_user' => $current_fack_user
                         ]);

@@ -7,47 +7,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use HasApiTokens;
+use Illuminate\Support\Facades\DB;
+use Laravel\Passport\Token;
 
 class AuthController extends Controller
 {
     /*
     AuthController: Controleur pour l'authentification en utilisant passport
     */
-
-    private function register_all(Request $request, $is_admin) {
-
-        $validate_data = $request->validate([
-            'name'      => 'required|max:255',
-            'email'     => 'email|required|unique:users',
-            'password'  => 'required|confirmed',
-        ]);
-
-        $validate_data['password'] = bcrypt($request->password);
-        if ($validate_data) {
-            $user           = User::create([
-                'name'      => $request->name,
-                'email'     => $request->email,
-                'password'  => $validate_data['password'],
-                'isonline'  => 1,
-                'is_admin'  => $is_admin,
-            ]);
-            if ($user) {
-                $access_token   = $user->createToken('authToken')->accessToken;
-
-                return response([
-                    'user'          => $user,
-                    'access_token'  => $access_token
-                ]);
-            }
-        } else {
-            return response([
-                'message' => 'invalid creation'
-            ]);
-        }
-
-    }
-
-    private function login_all(Request $request, $is_admin='') {
+    public function loginAll(Request $request) {
 
         $login_data = $request->validate([
             'email'     => 'email|required',
@@ -57,49 +25,41 @@ class AuthController extends Controller
         if (!auth()->attempt($login_data)) {
             return response(['message' => 'Invalid login or password']);
         }
-
-        $access_token = auth()->user()->createToken('authToken')->accessToken;
-
-        if (!empty($is_admin)) {
-            $users  = User::where(['isonline' => 1, 'is_admin' => 0])->get();
-        } else {
-            $users  = User::where(['isonline' => 1])->get();
-        }
+        $user = auth()->user();
+        $access_token = $user->createToken('authToken')->accessToken;
 
         // Update users status to online
-        auth()->user()->update(['isonline' => 1]);
+        $user->update(['isonline' => 1]);
 
         return response([
             'user'                  => auth()->user(),
-            'access_token'          => $access_token
+            'access_token'          => $access_token,
+            'token_type'            => 'Bearer',
         ]);
 
     }
 
-    public function userLogin(Request $request) {
-        return $this->login_all($request);
+    /*public function userLogin(Request $request) {
+        return $this->loginAll($request);
     }
 
     public function animatorLogin(Request $request) {
-        return $this->login_all($request, 1);
-    }
+        return $this->loginAll($request, 1);
+    }*/
 
     public function logout(Request $request) {
 
         if (Auth::check()) {
             auth()->user()->update(['isonline' => 0]);
-            Auth::logout();
-            /*$user = Auth::user()->token();
-            return response(['user' => $user]);*/
+            // Auth::logout();
+            // Se déconnecter de tous les appareils
+            DB::table('oauth_access_tokens')->where('user_id', Auth::user()->id)
+            ->update(['revoked' => true]);
+            // $request->user()->token()->revoke();
+            return response([
+                'user' => auth()->user()
+            ]);
         }
 
-    }
-
-    public function userRegister(Request $request) {
-        return $this->register_all($request, 0);
-    }
-
-    public function animatorRegister(Request $request) {
-        return $this->register_all($request, 1);
     }
 }
