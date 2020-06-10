@@ -1987,7 +1987,7 @@ __webpack_require__.r(__webpack_exports__);
 
         setTimeout(_this.scrollToEnd, 100);
       })["catch"](function (err) {
-        return console.log('err : ' + err.response);
+        return alert(err.response);
       });
     },
     scrollToEnd: function scrollToEnd() {
@@ -1999,6 +1999,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/message/view_messages/' + this.destination + '/' + this.fack_user, this.body).then(function (response) {
         _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
+      })["catch"](function (err) {
+        return alert(err.response);
       });
     }
   },

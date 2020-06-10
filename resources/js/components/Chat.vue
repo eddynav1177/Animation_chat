@@ -75,7 +75,7 @@
                         this.fetchMessages();
                         setTimeout(this.scrollToEnd, 100)
                     })
-                    .catch((err) => console.log('err : ' + err.response));
+                    .catch((err) => alert(err.response));
             },
             scrollToEnd() {
                 window.scrollTo(0, 99999);
@@ -85,14 +85,14 @@
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user           = response.data.user.name;
-                });
+                }).catch((err) => alert(err.response));
             }
         },
 
         created() {
             this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
-            console.log('destinationtest : ' + this.destination+ ', fack_user : ' + this.fack_user)
+            console.log('destinationtest : ' + this.destination + ', fack_user : ' + this.fack_user)
         }
 
     }

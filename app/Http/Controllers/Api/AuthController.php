@@ -16,7 +16,6 @@ class AuthController extends Controller
     AuthController: Controleur pour l'authentification en utilisant passport
     */
     public function loginAll(Request $request) {
-
         $login_data = $request->validate([
             'email'     => 'email|required',
             'password'  => 'required',
@@ -36,30 +35,16 @@ class AuthController extends Controller
             'access_token'          => $access_token,
             'token_type'            => 'Bearer',
         ]);
-
     }
-
-    /*public function userLogin(Request $request) {
-        return $this->loginAll($request);
-    }
-
-    public function animatorLogin(Request $request) {
-        return $this->loginAll($request, 1);
-    }*/
 
     public function logout(Request $request) {
-
-        if (Auth::check()) {
-            auth()->user()->update(['isonline' => 0]);
-            // Auth::logout();
-            // Se déconnecter de tous les appareils
-            DB::table('oauth_access_tokens')->where('user_id', Auth::user()->id)
-            ->update(['revoked' => true]);
-            // $request->user()->token()->revoke();
-            return response([
-                'user' => auth()->user()
-            ]);
-        }
-
+        auth()->user()->update(['isonline' => 0]);
+        // Se déconnecter de tous les appareils
+        DB::table('oauth_access_tokens')->where('user_id', Auth::user()->id)
+        ->update(['revoked' => true]);
+        // $request->user()->token()->revoke();
+        return response([
+            'user' => auth()->user()
+        ]);
     }
 }

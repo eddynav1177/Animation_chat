@@ -18,18 +18,16 @@ class ConversationsController extends Controller
     // ConversationsController: Controleur pour la gestion conversations entre les clients et les animatrices
     public function viewAllConversations(Request $request) {
 
-        if (Auth::check()) {
-            $user           = auth()->user();
-            $conversations  = ConversationsModel::where(['id_user' => $user->id])
-                            ->orWhere(['id_destination' => $user->id])
-                            ->first(['id_destination']);
-            $conversations  = ($conversations) ? $conversations : 'Aucune conversation';
+        $user           = auth()->user();
+        $conversations  = ConversationsModel::where(['id_user' => $user->id])
+                        ->orWhere(['id_destination' => $user->id])
+                        ->first(['id_destination']);
+        $conversations  = ($conversations) ? $conversations : 'Aucune conversation';
 
-            return response([
-                'conversations' => $conversations,
-                'user'          => $user
-            ]);
-        }
+        return response([
+            'conversations' => $conversations,
+            'user'          => $user
+        ]);
 
     }
 

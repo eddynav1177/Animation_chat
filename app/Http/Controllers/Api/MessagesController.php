@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MessagesModel;
 use App\User;
-use Auth;
 use App\Events\NewMessageEvent;
 use App\Models\ConversationsModel;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Exception;
 
 class MessagesController extends Controller
 {
@@ -18,154 +16,114 @@ class MessagesController extends Controller
     MessagesController: Controller pour la gestion des messages envoyés par les client et/ou les animatrices
     */
 
-    public function __construct() {
-        // $this->middleware('auth:api');
-        $this->middleware('auth');
-    }
-
     private function verificationMessagesStatusByUsers($id_user) {
+        /*if (empty($id_user)) {
+            throw new Exception('Les messages qui ont été envoyés datent de plus de 30minutes');
+        }*/
 
-        if (Auth::check()) {
-            $user_status = User::get_status_user($id_user);
-
-            if (!empty($user_status)) {
-                //Verification de la date d'envoi du dernier message
-                $last_message = MessagesModel::where(['sender_id' => $id_user])
-                                ->orWhere(['recipient_id' => $id_user])
-                                ->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')
-                                ->orderBy('created_at', 'desc')
-                                ->first();
-
-                $last_message = (!empty($last_message)) ? $last_message->id : '';
-                return $last_message;
-            }
+        //Verification de la date d'envoi du dernier message
+        $last_message = MessagesModel::where(['sender_id' => $id_user])
+                        ->orWhere(['recipient_id' => $id_user])
+                        ->where('created_at', 'BETWEEN (NOW() - INTERVAL 30 MINUTE) AND (NOW() + INTERVAL 30 MINUTE)')
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+        if (empty($last_message)) {
+            throw new Exception('Il n\'y a pas de messages qui ont été envoyés ces 30 dernières minutes');
         }
 
+        return $last_message->id;
     }
 
     public function sendMessage(Request $request, $destination, $fk_user) {
+        $user           = auth()->user();
+        $id_user        = $user->id;
 
-        if (Auth::check()) {
-            $user           = auth()->user();
-            $id_user        = $user->id;
-            // Envoi d'un message uniquement si l'id_user est différent de la fake_user
-            if ($id_user != $destination) {
-                $is_admin_destination   = User::get_admin_user($destination);
-
-                // Envoyer message si destination n'est pas admin user n'est pas un admin
-                if (!$is_admin_destination || empty($user->is_admin)) {
-                    $fk_user                = (($is_admin_destination && $user->is_admin == 1) || (!$is_admin_destination && (empty($user->is_admin)))) ? 0 : $fk_user;
-                    // Liste de tous les utilisateurs connectés pour l'envoi d'un message
-                    /*$list_users             = User::get_users_connected($id_user);
-
-                    if (count($list_users) > 0) {}*/
-                    $validate_contenu = $request->validate([
-                        'body' => 'required'
-                    ]);
-
-                    if ($validate_contenu) {
-                        // Affectation du message à une animatrice connectée
-                        if ($is_admin_destination || !empty($user->is_admin)) {
-                            $status_destinataire    = User::where(['isonline' => 1, 'id' => $destination])
-                                                    ->first();
-                            if ($status_destinataire) {
-                                // Verification si l'animatrice est connectée
-                                $destination = $status_destinataire->id;
-                            } else {
-                                // Sinon, envoi du message à une autre animatrice connectée
-                                $first_animator_connected   = User::where(['isonline' => 1, 'is_admin' => 1])
-                                                                ->where('id', '<>', $id_user)
-                                                                ->orderBy('id')
-                                                                ->first();
-                                $destination                = $first_animator_connected->id;
-                            }
-                        }
-
-                        // Vérification si la conversation existe déjà ou non
-                        $conversation           = ConversationsModel::where(['id_user' => $id_user, 'id_destination' => $destination])
-                                                ->orWhereRaw('(id_user = ' . $id_user . ' AND id_destination = ' . $destination .')')
-                                                ->first();
-                        if (!empty($conversation)) {
-                            $id_conversation        = $conversation->id;
-                        } else {
-                            // Création de la conversation
-                            $create_conversation    = ConversationsModel::create([
-                                'id_user'           => $id_user,
-                                'id_destination'    => $destination,
-                            ]);
-                            $id_conversation        = $create_conversation->id;
-                        }
-                        $message                = MessagesModel::create([
-                            'body'              => $request->body,
-                            'sender_id'         => $id_user,
-                            'recipient_id'      => $destination,
-                            'spamscore'         => 0,
-                            'status'            => 0,
-                            'read'              => 1,
-                            'conversation_id'   => $id_conversation,
-                            'moderated_at'      => $request->moderated_at,
-                            'fack_user_id'      => $fk_user
-                        ]);
-
-                        // Vérification de la derniere date d'envoi d'un message
-                        $status_message         = $this->verificationMessagesStatusByUsers($destination);
-
-                        if ($message) {
-                            // Envoi des events vers pusher
-                            broadcast(new NewMessageEvent($message))->toOthers();
-                            return response([
-                                'message'           => $message,
-                                'id_status_message' => $status_message,
-                                'user'              => auth()->user(),
-                            ]);
-                        }
-                    }
-                } else return response([
-                    'message' => 'Errer d\'envoi d\'un message'
-                ]);
-
-            }
-
+        if ($id_user == $destination) {
+            throw new Exception('Vous n\'avez pas le droit d\'envoyer un message à vous même');
         }
 
+        $is_admin_destination   = User::get_admin_user($destination);
+        if ($is_admin_destination && !empty($user->is_admin)) {
+            throw new Exception('Vous ne pouvez pas vous envoyer de messages en tant qu\'animatrice');
+        }
+        $fk_user                = (($is_admin_destination && $user->is_admin == 1) || (!$is_admin_destination && (empty($user->is_admin)))) ? 0 : $fk_user;
+
+        $validate_contenu = $request->validate([
+            'body' => 'required'
+        ]);
+
+        if (!$validate_contenu) {
+            throw new Exception('Formulaire invalide pour l\'insertion d\'un message');
+        }
+
+        $destination = User::usersIsAdmin($destination);
+        // Vérification si la conversation existe déjà ou non
+        $conversation           = ConversationsModel::where(['id_user' => $id_user, 'id_destination' => $destination])
+                                ->orWhereRaw('(id_user = ' . $id_user . ' AND id_destination = ' . $destination .')')
+                                ->first();
+        if (!empty($conversation)) {
+            $id_conversation        = $conversation->id;
+        }
+        $create_conversation    = ConversationsModel::create([
+            'id_user'           => $id_user,
+            'id_destination'    => $destination,
+        ]);
+        $id_conversation        = $create_conversation->id;
+        $message                = MessagesModel::create([
+            'body'              => $request->body,
+            'sender_id'         => $id_user,
+            'recipient_id'      => $destination,
+            'spamscore'         => 0,
+            'status'            => 0,
+            'read'              => 1,
+            'conversation_id'   => $id_conversation,
+            'moderated_at'      => $request->moderated_at,
+            'fack_user_id'      => $fk_user
+        ]);
+        // Envoi des events vers pusher
+        broadcast(new NewMessageEvent($message))->toOthers();
+        // Vérification de la derniere date d'envoi d'un message
+        // $status_message         = $this->verificationMessagesStatusByUsers($destination);
+        /*if (!$status_message) {
+            $status_message = '';
+        }*/
+        return response([
+            'message'           => $message,
+            // 'id_status_message' => $status_message,
+            'user'              => auth()->user(),
+        ]);
     }
 
     public function viewMessages(Request $request, $destination, $id_fk_user) {
-
-        if (Auth::check()) {
-            $user        = auth()->user();
-
-            if ($user->id != $destination) {
-                $is_admin_destination   = User::get_admin_user($destination);
-                // Envoyer message si destination n'est pas admin user n'est pas un admin
-                if (!$is_admin_destination || empty($user->is_admin)) {
-                    $status_message = $this->verificationMessagesStatusByUsers($destination);
-
-                    if ($id_fk_user != 0) {
-                        $messages = MessagesModel::where(['fack_user_id' => $id_fk_user])
-                                    ->where(['sender_id' => $user->id, 'recipient_id' => $destination])
-                                    ->orWhereRaw('(sender_id = ' . $destination . ' AND recipient_id = ' . $user->id .')')
-                                    ->orderBy('created_at')
-                                    ->pluck('body', 'created_at');
-                    }
-                    // Si l'id_fk_user == 0 => les users se tchattent en tant que client
-                    $messages       = MessagesModel::where(['sender_id' => $user->id, 'recipient_id' => $destination])
-                                    ->orWhereRaw('(sender_id = ' . $destination . ' AND recipient_id = ' . $user->id .')')
-                                    ->orderBy('created_at')
-                                    ->pluck('body', 'created_at');
-
-                    return response([
-                        'messages'          => $messages,
-                        'id_status_message' => $status_message,
-                        'user'              => $user,
-                    ]);
-                }
-                return response([
-                    'messages'          => null
-                ]);
-            }
+        $user        = auth()->user();
+        if ($user->id == $destination) {
+            throw new Exception('Impossible, vous consultez la liste des messages envoyés par vous même');
         }
+        $is_admin_destination   = User::get_admin_user($destination);
+        if ($is_admin_destination && !empty($user->is_admin)) {
+            throw new Exception('Impossible de consulter les messages en tant qu\'animatrice');
+        }
+        /*$status_message = $this->verificationMessagesStatusByUsers($destination);
+        if (!$status_message) {
+            $status_message = '';
+        }*/
+        if ($id_fk_user !== 0) {
+            $messages = MessagesModel::where(['fack_user_id' => $id_fk_user])
+                        ->where(['sender_id' => $user->id, 'recipient_id' => $destination])
+                        ->orWhereRaw('(sender_id = ' . $destination . ' AND recipient_id = ' . $user->id .')')
+                        ->orderBy('created_at')
+                        ->pluck('body', 'created_at');
+        }
+        // Si l'id_fk_user === 0 => les users se tchattent en tant que client
+        $messages       = MessagesModel::where(['sender_id' => $user->id, 'recipient_id' => $destination])
+                        ->orWhereRaw('(sender_id = ' . $destination . ' AND recipient_id = ' . $user->id .')')
+                        ->orderBy('created_at')
+                        ->pluck('body', 'created_at');
 
+        return response([
+            'messages'          => $messages,
+            // 'id_status_message' => $status_message,
+            'user'              => $user,
+        ]);
     }
-
 }

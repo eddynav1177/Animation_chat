@@ -13,8 +13,4 @@ class ConversationsModel extends Model
         'id_user', 'id_destination'
     ];
 
-    /*public function user() {
-        return $this->belongsTo(User::class);
-    }*/
-
 }

@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\User;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Auth;
 
 class RegisterController extends Controller
 {
@@ -21,27 +19,21 @@ class RegisterController extends Controller
         ]);
 
         $validate_data['password'] = bcrypt($request->password);
-        if ($validate_data) {
-            $user           = User::create([
-                'name'      => $request->name,
-                'email'     => $request->email,
-                'password'  => $validate_data['password'],
-                'isonline'  => 1,
-                'is_admin'  => $is_admin,
-            ]);
-            if ($user) {
-                $access_token   = $user->createToken('authToken')->accessToken;
-
-                return response([
-                    'user'          => $user,
-                    'access_token'  => $access_token
-                ]);
-            }
-        } else {
-            return response([
-                'message' => 'invalid creation'
-            ]);
+        if (!$validate_data) {
+            throw new Exception('Erreur de création de l\'utilisateur');
         }
+        $user           = User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => $validate_data['password'],
+            'isonline'  => 1,
+            'is_admin'  => $is_admin,
+        ]);
+        $access_token   = $user->createToken('authToken')->accessToken;
+        return response([
+            'user'          => $user,
+            'access_token'  => $access_token
+        ]);
 
     }
 

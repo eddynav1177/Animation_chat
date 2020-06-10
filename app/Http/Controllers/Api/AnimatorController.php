@@ -10,9 +10,4 @@ class AnimatorController extends Controller
     /*
     AnimatorController: Controleur pour la gestion des animatrices
     */
-    //
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 }
