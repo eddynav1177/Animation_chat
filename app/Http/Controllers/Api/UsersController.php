@@ -12,7 +12,6 @@ class UsersController extends Controller
     /*
     UsersController : Controller pour tout type d'utilisateurs connectés
     */
-
     public function listUsersConnected() {
         $id_user = auth()->user()->id;
         $list_users_connected = User::get_users_connected($id_user);

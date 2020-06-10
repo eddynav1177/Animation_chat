@@ -42,15 +42,14 @@ class User extends Authenticatable
     ];
 
     public static function get_users_connected($id_user, $is_admin = '') {
-        $user  = User::where(['isonline' => 1, 'id' => $id_user])->first();
-        if (empty($user)) {
-            throw new Exception('L\'utilisateur en question n\'est pas connectée');
-        }
         // Lister les autres users connectés à part l'user en question
         if (!empty($is_admin)) {
             $users  = User::where(['isonline'=> 1, 'is_admin'=> 0])->where('id', '!=', $id_user)->pluck('id');
         } else {
-            $users  = User::where(['isonline' => 1])->pluck('id');
+            $users  = User::where(['isonline' => 1])->where('id', '!=', $id_user)->pluck('id');
+        }
+        if (!$users) {
+            return ;
         }
         $string_to_replace  = ["[","]","\""];
         $users              = str_replace($string_to_replace, '', $users);
@@ -59,16 +58,19 @@ class User extends Authenticatable
         return $users;
     }
 
-    public static function get_status_user($user) {
-
+    /*public static function get_status_user($user) {
         $status = User::where(['isonline' => 1, 'id' => $user])->first();
-        $status = (!empty($status->id)) ? $status->id : null;
+        if (!$status) {
+            return;
+        }
         return $status;
-
-    }
+    }*/
 
     public static function get_admin_user($user) {
         $is_admin = User::where(['is_admin' => 1, 'id' => $user])->first(['id']);
+        if (!$is_admin) {
+            return;
+        }
         return $is_admin;
     }
 

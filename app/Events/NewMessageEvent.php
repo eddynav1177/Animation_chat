@@ -38,6 +38,7 @@ class NewMessageEvent implements ShouldBroadcast
             'id'            => $this->message->id,
             'sender_id'     => $this->message->sender_id,
             'recipient_id'  => $this->message->recipient_id,
+            'user_id'       => $this->message->user_id,
             'body'          => $this->message->body,
             'read'          => $this->message->read,
             'user'          => [

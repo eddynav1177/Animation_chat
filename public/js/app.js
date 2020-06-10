@@ -1959,8 +1959,9 @@ __webpack_require__.r(__webpack_exports__);
       message: [],
       created_at: '',
       sender: '',
-      destination: window.location.pathname.split('/').slice(-2, -1)[0],
-      fack_user: window.location.pathname.split('/').pop()
+      destination: window.location.pathname.split('/').slice(-3, -1)[0],
+      fack_user: window.location.pathname.split('/').slice(-2, -1)[0],
+      id_client: window.location.pathname.split('/').pop()
     };
   },
   mounted: function mounted() {
@@ -1996,7 +1997,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this2 = this;
 
-      axios.get('/api/message/view_messages/' + this.destination + '/' + this.fack_user, this.body).then(function (response) {
+      axios.get('/api/message/view_messages/' + this.destination + '/' + this.fack_user + '/' + this.id_client, this.body).then(function (response) {
         _this2.allMessages = response.data.messages;
         _this2.user = response.data.user.name;
       })["catch"](function (err) {
@@ -2007,7 +2008,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     this.fetchMessages();
-    console.log('destinationtest : ' + this.destination + ', fack_user : ' + this.fack_user);
+    console.log('destination : ' + this.destination + ', fack_user : ' + this.fack_user + ', id_client : ' + this.id_client);
   }
 });
 

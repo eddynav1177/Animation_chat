@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/home/users/list', 'Api\UsersController@listUsersConnected');
     Route::get('/home/animators/list', 'Api\UsersController@listAnimatorsConnected');
 
-    Route::get('/message/view_messages/{id}/{fk_user}', 'Api\MessagesController@viewMessages');
+    Route::get('/message/view_messages/{id}/{fk_user}/{user_id}', 'Api\MessagesController@viewMessages');
     Route::get('/message/conversations', 'Api\ConversationsController@viewAllConversations');
 
     Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
 
     // Test event
-    Route::get('/message/check_message/{id}/{fk_user}', function () {
+    Route::get('/message/check_message/{id}/{fk_user}/{user_id}', function () {
         return view('home');
     });
 });

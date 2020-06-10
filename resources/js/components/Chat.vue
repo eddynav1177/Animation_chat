@@ -50,8 +50,9 @@
                 message: [],
                 created_at: '',
                 sender: '',
-                destination: window.location.pathname.split('/').slice(-2, -1)[0],
-                fack_user: window.location.pathname.split('/').pop(),
+                destination: window.location.pathname.split('/').slice(-3, -1)[0],
+                fack_user: window.location.pathname.split('/').slice(-2, -1)[0],
+                id_client: window.location.pathname.split('/').pop(),
             }
         },
         mounted() {
@@ -81,18 +82,19 @@
                 window.scrollTo(0, 99999);
             },
             fetchMessages() {
-                axios.get('/api/message/view_messages/'+this.destination+'/'+this.fack_user, this.body)
+                axios.get('/api/message/view_messages/'+this.destination+'/'+this.fack_user+'/'+this.id_client, this.body)
                 .then(response => {
                     this.allMessages    = response.data.messages;
                     this.user           = response.data.user.name;
-                }).catch((err) => alert(err.response));
+                })
+                .catch((err) => alert(err.response));
             }
         },
 
         created() {
             this.csrfToken = document.querySelector('meta[name="csrf-token"]').content
             this.fetchMessages();
-            console.log('destinationtest : ' + this.destination + ', fack_user : ' + this.fack_user)
+            console.log('destination : ' + this.destination + ', fack_user : ' + this.fack_user + ', id_client : ' + this.id_client)
         }
 
     }
