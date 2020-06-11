@@ -15,13 +15,13 @@ class CreateFackUsersTable extends Migration
     {
         Schema::create('fake_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_user')->unsigned();
+            $table->integer('created_by')->unsigned();
             $table->string('username');
             $table->integer('age')->nullable();
             $table->string('picture')->nullable();
             $table->text('description')->nullable();
 
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

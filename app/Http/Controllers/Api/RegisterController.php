@@ -20,18 +20,18 @@ class RegisterController extends Controller
 
         $validate_data['password'] = bcrypt($request->password);
         if (!$validate_data) {
-            throw new Exception('Erreur de création de l\'utilisateur');
+            throw new Exception('Formulaire invalide, erreur de création de l\'utilisateur');
         }
-        $user           = User::create([
+        $user_created           = User::create([
             'name'      => $request->name,
             'email'     => $request->email,
             'password'  => $validate_data['password'],
             'isonline'  => 1,
             'is_admin'  => $is_admin,
         ]);
-        $access_token   = $user->createToken('authToken')->accessToken;
+        $access_token   = $user_created->createToken('authToken')->accessToken;
         return response([
-            'user'          => $user,
+            'user'          => $user_created,
             'access_token'  => $access_token
         ]);
 

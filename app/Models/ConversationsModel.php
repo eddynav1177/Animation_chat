@@ -10,7 +10,7 @@ class ConversationsModel extends Model
     protected $table    = 'conversations';
 
     protected $fillable = [
-        'id_user', 'id_destination'
+        'user_id', 'destination_id', 'fake_user_id'
     ];
 
 }

@@ -41,30 +41,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public static function get_users_connected($id_user, $is_admin = '') {
+    public static function get_users_connected($user_id, $is_admin = '') {
         // Lister les autres users connectés à part l'user en question
         if (!empty($is_admin)) {
-            $users  = User::where(['isonline'=> 1, 'is_admin'=> 0])->where('id', '!=', $id_user)->pluck('id');
+            $users  = User::where(['isonline'=> 1, 'is_admin'=> 0])->where('id', '!=', $user_id)->pluck('id');
         } else {
-            $users  = User::where(['isonline' => 1])->where('id', '!=', $id_user)->pluck('id');
+            $users  = User::where(['isonline' => 1])->where('id', '!=', $user_id)->pluck('id');
         }
         if (!$users) {
             return ;
         }
-        $string_to_replace  = ["[","]","\""];
-        $users              = str_replace($string_to_replace, '', $users);
+        $str_to_replace     = ["[","]","\""];
+        $users              = str_replace($str_to_replace, '', $users);
         $users              = explode(',', $users);
 
         return $users;
     }
-
-    /*public static function get_status_user($user) {
-        $status = User::where(['isonline' => 1, 'id' => $user])->first();
-        if (!$status) {
-            return;
-        }
-        return $status;
-    }*/
 
     public static function get_admin_user($user) {
         $is_admin = User::where(['is_admin' => 1, 'id' => $user])->first(['id']);
@@ -74,11 +66,20 @@ class User extends Authenticatable
         return $is_admin;
     }
 
-    public static function usersIsAdmin ($destination) {
-        $user                   = auth()->user();
+    public static function get_first_animator_connected() {
+        $current_user               = auth()->user();
+        $first_animator_connected   = User::where(['isonline' => 1, 'is_admin' => 1])
+                                    ->where('id', '<>', $current_user->id)
+                                    ->orderBy('id')
+                                    ->first();
+        $destination                = $first_animator_connected->id;
+        return $destination;
+    }
+
+    public static function users_is_admin ($destination) {
+        $current_user           = auth()->user();
         $is_admin_destination   = User::get_admin_user($destination);
-        if (!$is_admin_destination && !empty($user->is_admin)) {
-            // throw new Exception('L\'user connecté et la destination sont des clients');
+        if (!$is_admin_destination && !empty($current_user->is_admin)) {
             return $destination;
         }
 
@@ -88,12 +89,7 @@ class User extends Authenticatable
             // Verification si l'animatrice est connectée
             $destination = $status_destinataire->id;
         }
-        // Sinon, envoi du message à une autre animatrice connectée
-        $first_animator_connected   = User::where(['isonline' => 1, 'is_admin' => 1])
-                                    ->where('id', '<>', $user->id)
-                                    ->orderBy('id')
-                                    ->first();
-        $destination                = $first_animator_connected->id;
+        $destination            = User::get_first_animator_connected();
         return $destination;
 
     }

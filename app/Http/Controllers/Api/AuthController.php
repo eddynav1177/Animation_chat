@@ -24,14 +24,13 @@ class AuthController extends Controller
         if (!auth()->attempt($login_data)) {
             return response(['message' => 'Invalid login or password']);
         }
-        $user = auth()->user();
-        $access_token = $user->createToken('authToken')->accessToken;
+        $current_user = auth()->user();
+        $access_token = $current_user->createToken('authToken')->accessToken;
 
-        // Update users status to online
-        $user->update(['isonline' => 1]);
+        $current_user->update(['isonline' => 1]);
 
         return response([
-            'user'                  => auth()->user(),
+            'user'                  => $current_user,
             'access_token'          => $access_token,
             'token_type'            => 'Bearer',
         ]);

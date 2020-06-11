@@ -37,25 +37,20 @@ Route::post('/login/user', 'Api\AuthController@loginAll');
 
 Route::group(['middleware' => 'auth'], function() {
     Route::post('/message/tchat/{id}/{fk_user}', 'Api\MessagesController@sendMessage');
-    Route::post('/fc_user/create', 'Api\FackUsersController@createFackUser');
-    Route::post('/fc_user/choose/{id}', 'Api\FackUsersController@chooseFackUserByAdmin');
+    Route::post('/fk_user/create', 'Api\FackUsersController@createFakeUser');
 
-    Route::get('/home/users/list', 'Api\UsersController@listUsersConnected');
-    Route::get('/home/animators/list', 'Api\UsersController@listAnimatorsConnected');
+    Route::get('/users/list', 'Api\UsersController@listUsersConnected');
+    Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
+    Route::get('/animators/list', 'Api\UsersController@listAnimatorsConnected');
 
     Route::get('/message/view_messages/{id}/{fk_user}/{user_id}', 'Api\MessagesController@viewMessages');
-    Route::get('/message/conversations', 'Api\ConversationsController@viewAllConversations');
+    Route::get('/conversations/list', 'Api\ConversationsController@viewAllConversations');
 
-    Route::get('/user/show_profile/{id}', 'Api\UsersController@showUserProfile');
-
-    Route::get('/fc_user/list/connected', 'Api\FackUsersController@getFackUsersAllAffected');
-    Route::get('/fc_user/list/disconnected', 'Api\FackUsersController@getFackUsersAllNotAffected');
-    Route::get('/fc_user/show_profile/{id}', 'Api\FackUsersController@showProfileFackUser');
+    Route::get('/fk_user/list', 'Api\FackUsersController@fakeUsersList');
+    Route::get('/fk_user/show_profile/{id}', 'Api\FackUsersController@showProfileFakeUser');
 
     // Test event
     Route::get('/message/check_message/{id}/{fk_user}/{user_id}', function () {
         return view('home');
     });
 });
-
-

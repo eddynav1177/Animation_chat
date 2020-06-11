@@ -14,7 +14,7 @@ class Animateurs extends Migration
     public function up()
     {
         //
-        Schema::create('animateurs', function (Blueprint $table) {
+        Schema::create('animators', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
@@ -34,6 +34,6 @@ class Animateurs extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('animateurs');
+        Schema::dropIfExists('animators');
     }
 }

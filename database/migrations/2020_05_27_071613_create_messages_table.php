@@ -17,21 +17,21 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->integer('sender_id')->unsigned();
             $table->integer('recipient_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('client_id')->unsigned();
             $table->text('body')->nullable();
             $table->integer('spamscore')->default(0);
             $table->integer('status')->default(0);
             $table->integer('jabber_id')->nullable();
             $table->integer('conversation_id')->unsigned();
-            $table->integer('fack_user_id')->unsigned();
+            $table->integer('fake_user_id')->unsigned();
             $table->integer('read')->default(0);
             $table->string('sent_from')->default('api_cruzeiro');
             $table->dateTime('moderated_at')->nullable();
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
-            $table->foreign('fack_user_id')->references('id')->on('fack_users')->onDelete('cascade');
+            $table->foreign('fake_user_id')->references('id')->on('fack_users')->onDelete('cascade');
             $table->timestamps();
         });
     }
