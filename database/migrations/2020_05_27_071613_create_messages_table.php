@@ -17,7 +17,7 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->integer('sender_id')->unsigned();
             $table->integer('recipient_id')->unsigned();
-            $table->integer('client_id')->unsigned();
+            $table->integer('animator_id')->unsigned();
             $table->text('body')->nullable();
             $table->integer('spamscore')->default(0);
             $table->integer('status')->default(0);
@@ -29,7 +29,7 @@ class CreateMessagesTable extends Migration
             $table->dateTime('moderated_at')->nullable();
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('animator_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
             $table->foreign('fake_user_id')->references('id')->on('fack_users')->onDelete('cascade');
             $table->timestamps();

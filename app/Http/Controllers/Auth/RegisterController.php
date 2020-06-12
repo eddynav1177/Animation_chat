@@ -44,8 +44,6 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-        $this->middleware('guest:super_clients');
-        $this->middleware('guest:animateurs');
     }
 
     /**
@@ -76,38 +74,5 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-    }
-
-    public function clientsRegister() {
-        return view('auth.register', ['url' => 'super_clients']);
-    }
-
-    public function animatorRegister() {
-        return view('auth.register', ['url'=> 'animateurs']);
-    }
-
-    // Ajout d'un client
-    protected function createClient(Request $request) {
-        $this->validator($request->all())->validate();
-        $clients = ClientsModel::create([
-            'name'      => $request['name'],
-            'email'     => $request['email'],
-            'password'  => Hash::make($request['password'])
-        ]);
-
-        return redirect()->intended('login/clients');
-    }
-
-    // Ajout d'un animateur
-    protected function createAnimateur(Request $request) {
-
-        $this->validator($request->all())->validate();
-        $clients = AnimateursModel::create([
-            'name'      => $request['name'],
-            'email'     => $request['email'],
-            'password'  => Hash::make($request['password'])
-        ]);
-
-        return redirect()->intended('login/animateurs');
     }
 }

@@ -33,7 +33,8 @@ Route::get('/logout', 'Api\AuthController@logout');
 
 Route::post('/register/user', 'Api\RegisterController@userRegister');
 Route::post('/register/animator', 'Api\RegisterController@animatorRegister');
-Route::post('/login/user', 'Api\AuthController@loginAll');
+Route::post('/login/user', 'Api\AuthController@userLogin');
+Route::post('/login/animator', 'Api\AuthController@animatorLogin');
 
 Route::group(['middleware' => 'auth'], function() {
     Route::post('/message/tchat/{id}/{fk_user}', 'Api\MessagesController@sendMessage');

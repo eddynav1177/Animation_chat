@@ -17,9 +17,11 @@ class CreateConversationsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('destination_id')->unsigned();
+            $table->integer('animator_id')->unsigned();
             $table->integer('fake_user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('destination_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('animator_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('fake_user_id')->references('id')->on('fake_users')->onDelete('cascade');
             $table->timestamps();
         });

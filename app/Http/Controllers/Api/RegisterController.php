@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
-    private function registerAll(Request $request, $is_admin) {
+    private function registerAll(Request $request, $is_admin, $is_animator) {
 
         $validate_data = $request->validate([
             'name'      => 'required|max:255',
@@ -23,11 +23,12 @@ class RegisterController extends Controller
             throw new Exception('Formulaire invalide, erreur de création de l\'utilisateur');
         }
         $user_created           = User::create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => $validate_data['password'],
-            'isonline'  => 1,
-            'is_admin'  => $is_admin,
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'password'      => $validate_data['password'],
+            'isonline'      => 1,
+            'is_admin'      => $is_admin,
+            'is_animator'   => $is_animator,
         ]);
         $access_token   = $user_created->createToken('authToken')->accessToken;
         return response([
@@ -38,10 +39,10 @@ class RegisterController extends Controller
     }
 
     public function userRegister(Request $request) {
-        return $this->registerAll($request, 0);
+        return $this->registerAll($request, 0, true);
     }
 
     public function animatorRegister(Request $request) {
-        return $this->registerAll($request, 1);
+        return $this->registerAll($request, 1, false);
     }
 }

@@ -15,7 +15,7 @@ class AuthController extends Controller
     /*
     AuthController: Controleur pour l'authentification en utilisant passport
     */
-    public function loginAll(Request $request) {
+    private function loginAll(Request $request, $is_animator) {
         $login_data = $request->validate([
             'email'     => 'email|required',
             'password'  => 'required',
@@ -27,7 +27,7 @@ class AuthController extends Controller
         $current_user = auth()->user();
         $access_token = $current_user->createToken('authToken')->accessToken;
 
-        $current_user->update(['isonline' => 1]);
+        $current_user->update(['isonline' => 1, 'is_animator' => $is_animator]);
 
         return response([
             'user'                  => $current_user,
@@ -45,5 +45,13 @@ class AuthController extends Controller
         return response([
             'user' => auth()->user()
         ]);
+    }
+
+    public function userLogin(Request $request) {
+        return $this->loginAll($request, 0);
+    }
+
+    public function animatorLogin(Request $request) {
+        return $this->loginAll($request, 1);
     }
 }

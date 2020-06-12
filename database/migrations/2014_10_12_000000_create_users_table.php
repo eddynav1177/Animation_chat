@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('isonline')->nullable();
             $table->integer('is_admin')->nullable();
+            $table->boolean('is_animator')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
