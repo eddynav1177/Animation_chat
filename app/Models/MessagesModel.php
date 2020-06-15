@@ -48,9 +48,10 @@ class MessagesModel extends Model
         return $last_message_time->count();
     }
 
-    public static function count_messages_send_by_user($animator_id, $fake_user_id) {
+    public static function count_messages_send_by_user($animator_id, $fake_user_id, $recipient_id) {
         $count_messages = MessagesModel::where(['animator_id' => $animator_id])
                         ->where(['fake_user_id' => $fake_user_id])
+                        ->whereRaw('(sender_id = ' . $recipient_id . ' OR recipient_id = ' . $recipient_id . ')')
                         ->get();
         if (empty($count_messages)) {
             return;

@@ -77,7 +77,7 @@ class User extends Authenticatable
     public static function get_first_animator_connected() {
         $current_user               = auth()->user();
         $first_animator_connected   = User::where(['isonline' => 1, 'is_animator' => 1])
-                                    ->where('id', '<>', $current_user->id)
+                                    // ->where('id', '<>', $current_user->id)
                                     ->orderBy('id')
                                     ->first();
         if (!$first_animator_connected) {

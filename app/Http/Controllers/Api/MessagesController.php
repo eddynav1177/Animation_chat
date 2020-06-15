@@ -44,21 +44,21 @@ class MessagesController extends Controller
             throw new Exception('Formulaire invalide, Erreur de création du message');
         }
         $last_message_id = MessagesModel::get_last_message_time_id_send_by_user($destination);
-        $count_messages = MessagesModel::count_messages_send_by_user($animator_id, $fake_user_id);
+        $count_messages = MessagesModel::count_messages_send_by_user($animator_id, $fake_user_id, $destination);
 
         if (empty($last_message_id) && !(empty($count_messages))) {
             $destination = User::get_first_animator_connected();
         }
 
         $destination  = User::assign_message_to_animator($destination);
-        $animator_message_affinity = User::get_animator_message_affinity($animator_id);
+        $animator_message_affinity = MessagesModel::get_animator_message_affinity($animator_id);
         $conversation = ConversationsModel::where(['user_id' => $current_user_id, 'destination_id' => $destination])
                         ->orWhereRaw('(user_id = ' . $destination . ' AND destination_id = ' . $current_user_id .')')
                         ->first();
         if (!empty($conversation)) {
             $conversation_id = $conversation->id;
         }
-        if ((!empty($conversation)) && !empty($message_affinity_id)) {
+        if (!empty($conversation) && !empty($message_affinity_id)) {
             ConversationsModel::where(['id' => $conversation_id])->update(['animator_id' => $animator_message_affinity]);
             $animator_id = $animator_message_affinity;
         }
@@ -77,7 +77,7 @@ class MessagesController extends Controller
             'sender_id'         => $current_user_id,
             'recipient_id'      => $destination,
             'spamscore'         => 0,
-            'status'            => 0,
+            'status'            => 1,
             'read'              => 1,
             'conversation_id'   => $conversation_id,
             'moderated_at'      => $request->moderated_at,
@@ -93,14 +93,14 @@ class MessagesController extends Controller
 
     public function viewMessages(Request $request, $destination, $fake_user_id, $animator_id) {
         $current_user = auth()->user();
-        if ($current_user->id == $destination) {
+        if ($current_user->id === $destination) {
             throw new Exception('Impossible d\'afficher les messages qui vous sont envoyés par vous même');
         }
         $is_animator_destination = User::user_is_animator($destination);
         if ($is_animator_destination && !empty($current_user->is_animator)) {
             throw new Exception('Impossible de consulter les messages en tant qu\'animatrice');
         }
-        if ($fake_user_id != 0) {
+        if ($fake_user_id !== 0) {
             $messages = MessagesModel::where(['fake_user_id' => $fake_user_id])
                         ->where(['animator_id' => $animator_id]);
         } else {

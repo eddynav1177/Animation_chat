@@ -39,10 +39,10 @@ class RegisterController extends Controller
     }
 
     public function userRegister(Request $request) {
-        return $this->registerAll($request, 0, true);
+        return $this->registerAll($request, 0, 0);
     }
 
     public function animatorRegister(Request $request) {
-        return $this->registerAll($request, 1, false);
+        return $this->registerAll($request, 0, 1);
     }
 }
