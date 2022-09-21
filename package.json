@@ -27,6 +27,6 @@
     "dependencies": {
         "laravel-echo": "^1.8.0",
         "npm-watch": "^0.6.0",
-        "vuetify": "^2.2.30"
+        "vuetify": "^2.6.10"
     }
 }
